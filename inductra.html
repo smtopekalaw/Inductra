@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inductra Building Systems | Procurement Advisory for Faith & Education</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1a2e;
+    --slate: #2d3748;
+    --warm-white: #fdfaf6;
+    --cream: #f5f0e8;
+    --copper: #b5651d;
+    --copper-light: #d4843a;
+    --copper-pale: #f0e0cc;
+    --sage: #4a7c6f;
+    --sage-light: #6aaa9a;
+    --sage-pale: #ddf0eb;
+    --sand: #e8dcc8;
+    --text-muted: #6b7280;
+    --border: #e2d9cc;
+    --shadow: 0 4px 24px rgba(26,26,46,0.08);
+    --shadow-lg: 0 16px 48px rgba(26,26,46,0.14);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--warm-white);
+    color: var(--ink);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(253,250,246,0.94);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 clamp(1.5rem, 5vw, 4rem);
+    height: 68px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-logo {
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none;
+  }
+  .nav-logo-mark {
+    width: 36px; height: 36px;
+    background: var(--copper);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff;
+    font-family: 'Libre Baskerville', serif;
+    font-size: 16px; font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+  .nav-logo-text {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1.1rem; font-weight: 700;
+    color: var(--ink); letter-spacing: -0.3px;
+  }
+  .nav-logo-text span { color: var(--copper); }
+  .nav-links {
+    display: flex; align-items: center; gap: 2rem;
+    list-style: none;
+  }
+  .nav-links a {
+    text-decoration: none; color: var(--slate);
+    font-size: 0.875rem; font-weight: 500;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--copper); }
+  .nav-cta {
+    background: var(--copper); color: #fff !important;
+    padding: 0.5rem 1.25rem; border-radius: 6px;
+    transition: background 0.2s !important;
+  }
+  .nav-cta:hover { background: var(--copper-light) !important; color: #fff !important; }
+
+  /* ─── HERO ─── */
+  #home {
+    min-height: 100vh;
+    padding: 68px 0 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-left {
+    padding: clamp(4rem, 8vw, 7rem) clamp(2rem, 5vw, 5rem) clamp(4rem, 8vw, 7rem) clamp(2rem, 6vw, 7rem);
+    display: flex; flex-direction: column; justify-content: center;
+    position: relative; z-index: 2;
+  }
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--copper-pale); border: 1px solid var(--copper);
+    color: var(--copper); border-radius: 100px;
+    padding: 0.35rem 1rem; font-size: 0.75rem; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    margin-bottom: 1.75rem;
+    width: fit-content;
+    opacity: 0; animation: fadeUp 0.7s 0.1s forwards;
+  }
+  .hero-eyebrow::before {
+    content: ''; width: 6px; height: 6px;
+    background: var(--copper); border-radius: 50%;
+  }
+  .hero-h1 {
+    font-family: 'Libre Baskerville', serif;
+    font-size: clamp(2.4rem, 4vw, 3.6rem);
+    line-height: 1.18; letter-spacing: -0.02em;
+    color: var(--ink); margin-bottom: 1.5rem;
+    opacity: 0; animation: fadeUp 0.7s 0.2s forwards;
+  }
+  .hero-h1 em { color: var(--copper); font-style: italic; }
+  .hero-sub {
+    font-size: 1.1rem; line-height: 1.7;
+    color: var(--text-muted); max-width: 460px;
+    margin-bottom: 2.5rem;
+    opacity: 0; animation: fadeUp 0.7s 0.35s forwards;
+  }
+  .hero-actions {
+    display: flex; gap: 1rem; flex-wrap: wrap;
+    opacity: 0; animation: fadeUp 0.7s 0.45s forwards;
+  }
+  .btn-primary {
+    background: var(--copper); color: #fff;
+    padding: 0.875rem 2rem; border-radius: 8px;
+    font-size: 0.95rem; font-weight: 600;
+    text-decoration: none; border: none; cursor: pointer;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    box-shadow: 0 4px 16px rgba(181,101,29,0.3);
+  }
+  .btn-primary:hover { background: var(--copper-light); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(181,101,29,0.4); }
+  .btn-secondary {
+    background: transparent; color: var(--ink);
+    padding: 0.875rem 2rem; border-radius: 8px;
+    font-size: 0.95rem; font-weight: 500;
+    text-decoration: none; border: 1.5px solid var(--border);
+    cursor: pointer; transition: border-color 0.2s, background 0.2s;
+  }
+  .btn-secondary:hover { border-color: var(--copper); background: var(--copper-pale); }
+
+  .hero-stats {
+    display: flex; gap: 2.5rem; margin-top: 3.5rem; padding-top: 2.5rem;
+    border-top: 1px solid var(--border);
+    opacity: 0; animation: fadeUp 0.7s 0.55s forwards;
+  }
+  .stat-item {}
+  .stat-num {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1.8rem; font-weight: 700; color: var(--copper);
+    display: block;
+  }
+  .stat-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
+
+  .hero-right {
+    background: var(--cream);
+    position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .hero-right::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse at 70% 30%, rgba(181,101,29,0.12) 0%, transparent 55%),
+      radial-gradient(ellipse at 30% 80%, rgba(74,124,111,0.1) 0%, transparent 50%);
+  }
+  .hero-visual {
+    position: relative; z-index: 2;
+    padding: 3rem;
+    opacity: 0; animation: fadeIn 1s 0.6s forwards;
+  }
+  .process-card {
+    background: #fff; border-radius: 16px;
+    box-shadow: var(--shadow-lg);
+    padding: 2rem 2.25rem; width: 340px;
+    border: 1px solid var(--border);
+  }
+  .process-card-title {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-muted);
+    margin-bottom: 1.5rem;
+  }
+  .process-step {
+    display: flex; align-items: flex-start; gap: 1rem;
+    padding: 0.875rem 0;
+    border-bottom: 1px solid var(--cream);
+  }
+  .process-step:last-child { border-bottom: none; padding-bottom: 0; }
+  .step-num {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--copper-pale); color: var(--copper);
+    font-size: 0.75rem; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 1px;
+  }
+  .step-text strong { display: block; font-size: 0.875rem; font-weight: 600; color: var(--ink); }
+  .step-text span { font-size: 0.78rem; color: var(--text-muted); }
+  .badge-row {
+    display: flex; gap: 0.5rem; margin-top: 1.5rem;
+  }
+  .badge {
+    background: var(--sage-pale); color: var(--sage);
+    border: 1px solid var(--sage-light);
+    padding: 0.25rem 0.75rem; border-radius: 100px;
+    font-size: 0.72rem; font-weight: 600;
+  }
+  .badge.copper { background: var(--copper-pale); color: var(--copper); border-color: var(--copper); }
+
+  /* ─── SECTION BASE ─── */
+  section { padding: clamp(4rem, 8vw, 7rem) clamp(1.5rem, 5vw, 4rem); }
+  .section-inner { max-width: 1120px; margin: 0 auto; }
+  .section-eyebrow {
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--copper);
+    margin-bottom: 1rem;
+  }
+  .section-h2 {
+    font-family: 'Libre Baskerville', serif;
+    font-size: clamp(1.9rem, 3vw, 2.7rem);
+    line-height: 1.22; letter-spacing: -0.02em;
+    color: var(--ink); margin-bottom: 1rem;
+  }
+  .section-sub {
+    font-size: 1rem; color: var(--text-muted);
+    max-width: 560px; line-height: 1.7;
+    margin-bottom: 3rem;
+  }
+
+  /* ─── VALUE PROPS ─── */
+  #about { background: var(--warm-white); }
+  .audience-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 2rem; margin-top: 3rem;
+  }
+  .audience-card {
+    background: #fff; border: 1px solid var(--border);
+    border-radius: 16px; padding: 2.5rem;
+    position: relative; overflow: hidden;
+    transition: box-shadow 0.3s, transform 0.3s;
+  }
+  .audience-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-3px); }
+  .audience-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  }
+  .audience-card.faith::before { background: var(--copper); }
+  .audience-card.contractor::before { background: var(--sage); }
+  .audience-icon {
+    width: 52px; height: 52px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem; margin-bottom: 1.5rem;
+  }
+  .faith .audience-icon { background: var(--copper-pale); }
+  .contractor .audience-icon { background: var(--sage-pale); }
+  .audience-card h3 {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1.3rem; margin-bottom: 0.75rem; color: var(--ink);
+  }
+  .audience-card p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 1.5rem; }
+  .benefit-list { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+  .benefit-list li {
+    display: flex; align-items: flex-start; gap: 0.6rem;
+    font-size: 0.875rem; color: var(--slate);
+  }
+  .benefit-list li::before {
+    content: '✓'; font-weight: 700; font-size: 0.75rem;
+    width: 18px; height: 18px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 1px;
+  }
+  .faith .benefit-list li::before { background: var(--copper-pale); color: var(--copper); }
+  .contractor .benefit-list li::before { background: var(--sage-pale); color: var(--sage); }
+
+  /* ─── HOW IT WORKS ─── */
+  #how-it-works { background: var(--cream); }
+  .steps-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 0; position: relative;
+  }
+  .steps-grid::before {
+    content: '';
+    position: absolute; top: 36px; left: 10%; right: 10%; height: 2px;
+    background: linear-gradient(90deg, var(--copper-pale), var(--copper), var(--copper-pale));
+    z-index: 0;
+  }
+  .how-step {
+    padding: 0 1.5rem; position: relative; z-index: 1;
+    text-align: center;
+    opacity: 0; animation: fadeUp 0.6s forwards;
+  }
+  .how-step:nth-child(1) { animation-delay: 0.1s; }
+  .how-step:nth-child(2) { animation-delay: 0.25s; }
+  .how-step:nth-child(3) { animation-delay: 0.4s; }
+  .how-step:nth-child(4) { animation-delay: 0.55s; }
+  .step-circle {
+    width: 72px; height: 72px; border-radius: 50%;
+    background: #fff; border: 2px solid var(--copper);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1.5rem;
+    font-size: 1.5rem;
+    box-shadow: 0 4px 16px rgba(181,101,29,0.15);
+  }
+  .how-step h4 {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1rem; margin-bottom: 0.6rem; color: var(--ink);
+  }
+  .how-step p { font-size: 0.83rem; color: var(--text-muted); line-height: 1.65; }
+  .how-step .step-tag {
+    display: inline-block; margin-top: 1rem;
+    background: var(--copper-pale); color: var(--copper);
+    border: 1px solid var(--copper); padding: 0.2rem 0.65rem;
+    border-radius: 100px; font-size: 0.7rem; font-weight: 700;
+    letter-spacing: 0.06em; text-transform: uppercase;
+  }
+  .fee-note {
+    margin-top: 3.5rem; background: #fff;
+    border: 1px solid var(--border); border-radius: 12px;
+    padding: 1.75rem 2.25rem;
+    display: flex; align-items: center; gap: 1.5rem;
+  }
+  .fee-icon { font-size: 2rem; flex-shrink: 0; }
+  .fee-note h4 {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1.05rem; margin-bottom: 0.25rem; color: var(--ink);
+  }
+  .fee-note p { font-size: 0.875rem; color: var(--text-muted); line-height: 1.6; }
+  .fee-note strong { color: var(--copper); }
+
+  /* ─── ACTIVE RFPs ─── */
+  #rfps { background: var(--warm-white); }
+  .rfp-filters {
+    display: flex; gap: 0.75rem; margin-bottom: 2rem; flex-wrap: wrap;
+  }
+  .filter-btn {
+    padding: 0.5rem 1.25rem; border-radius: 100px;
+    border: 1.5px solid var(--border);
+    background: #fff; color: var(--slate);
+    font-size: 0.82rem; font-weight: 500; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .filter-btn.active, .filter-btn:hover {
+    background: var(--copper); border-color: var(--copper); color: #fff;
+  }
+  .rfp-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+  .rfp-card {
+    background: #fff; border: 1px solid var(--border);
+    border-radius: 14px; padding: 1.75rem;
+    transition: box-shadow 0.25s, transform 0.25s;
+    display: flex; flex-direction: column;
+  }
+  .rfp-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+  .rfp-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; }
+  .rfp-category {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; padding: 0.25rem 0.7rem;
+    border-radius: 100px;
+  }
+  .cat-roofing { background: var(--copper-pale); color: var(--copper); }
+  .cat-paving { background: var(--sage-pale); color: var(--sage); }
+  .cat-hvac { background: #e8edf5; color: #3b5b9c; }
+  .cat-electrical { background: #f5f0d8; color: #8a7020; }
+  .rfp-status {
+    font-size: 0.72rem; font-weight: 600;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .status-open { color: var(--sage); }
+  .status-open::before { content: '●'; font-size: 0.6rem; }
+  .status-closed { color: var(--text-muted); }
+  .status-closed::before { content: '●'; font-size: 0.6rem; }
+  .rfp-card h4 {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1.05rem; margin-bottom: 0.35rem; color: var(--ink);
+  }
+  .rfp-org { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1rem; }
+  .rfp-meta { display: flex; gap: 1.25rem; margin-bottom: 1.25rem; }
+  .rfp-meta-item { font-size: 0.78rem; color: var(--slate); }
+  .rfp-meta-item span { display: block; font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px; }
+  .rfp-card-footer { margin-top: auto; padding-top: 1.25rem; border-top: 1px solid var(--cream); display: flex; justify-content: space-between; align-items: center; }
+  .rfp-scope { font-size: 0.78rem; color: var(--text-muted); }
+  .btn-rfp {
+    background: var(--ink); color: #fff;
+    padding: 0.45rem 1.1rem; border-radius: 6px;
+    font-size: 0.78rem; font-weight: 600; text-decoration: none;
+    border: none; cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-rfp:hover { background: var(--copper); }
+  .rfp-cta-row { margin-top: 2.5rem; text-align: center; }
+  .rfp-cta-row p { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem; }
+
+  /* ─── CONTRACTOR PORTAL ─── */
+  #contractors { background: var(--ink); color: #fff; }
+  #contractors .section-eyebrow { color: var(--copper-light); }
+  #contractors .section-h2 { color: #fff; }
+  #contractors .section-sub { color: rgba(255,255,255,0.6); }
+  .contractor-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+  .contractor-left {}
+  .contractor-perks { display: flex; flex-direction: column; gap: 1.25rem; margin-top: 2rem; }
+  .perk-row {
+    display: flex; align-items: flex-start; gap: 1rem;
+    background: rgba(255,255,255,0.05); border-radius: 12px;
+    padding: 1.25rem; border: 1px solid rgba(255,255,255,0.08);
+  }
+  .perk-icon {
+    width: 42px; height: 42px; border-radius: 10px;
+    background: rgba(181,101,29,0.2); color: var(--copper-light);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; flex-shrink: 0;
+  }
+  .perk-text strong { display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: 0.2rem; }
+  .perk-text span { font-size: 0.82rem; color: rgba(255,255,255,0.55); line-height: 1.5; }
+
+  .reg-form {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px; padding: 2.5rem;
+  }
+  .reg-form h3 {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1.3rem; margin-bottom: 0.5rem; color: #fff;
+  }
+  .reg-form p { font-size: 0.85rem; color: rgba(255,255,255,0.5); margin-bottom: 2rem; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .form-group { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1rem; }
+  .form-group.full { grid-column: 1 / -1; }
+  .form-group label { font-size: 0.78rem; font-weight: 600; color: rgba(255,255,255,0.6); letter-spacing: 0.04em; text-transform: uppercase; }
+  .form-group input, .form-group select, .form-group textarea {
+    background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px; padding: 0.75rem 1rem;
+    color: #fff; font-size: 0.9rem; font-family: 'DM Sans', sans-serif;
+    transition: border-color 0.2s;
+    outline: none;
+  }
+  .form-group input::placeholder, .form-group textarea::placeholder { color: rgba(255,255,255,0.3); }
+  .form-group select option { background: var(--ink); color: #fff; }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    border-color: var(--copper);
+  }
+  .form-group textarea { resize: vertical; min-height: 90px; }
+  .checkbox-group { display: flex; flex-direction: column; gap: 0.6rem; }
+  .checkbox-item {
+    display: flex; align-items: center; gap: 0.6rem;
+    font-size: 0.85rem; color: rgba(255,255,255,0.7); cursor: pointer;
+  }
+  .checkbox-item input[type="checkbox"] { accent-color: var(--copper); width: 15px; height: 15px; cursor: pointer; }
+  .btn-submit {
+    width: 100%; background: var(--copper); color: #fff;
+    padding: 1rem; border-radius: 8px; border: none;
+    font-size: 1rem; font-weight: 600; cursor: pointer;
+    margin-top: 1.25rem;
+    transition: background 0.2s, transform 0.15s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .btn-submit:hover { background: var(--copper-light); transform: translateY(-1px); }
+
+  /* ─── CONTACT ─── */
+  #contact { background: var(--cream); }
+  .contact-layout { display: grid; grid-template-columns: 1fr 1.4fr; gap: 4rem; align-items: start; }
+  .contact-info h3 {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1.5rem; margin-bottom: 1rem; color: var(--ink);
+  }
+  .contact-info p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.75; margin-bottom: 2rem; }
+  .contact-details { display: flex; flex-direction: column; gap: 1rem; }
+  .contact-item {
+    display: flex; align-items: center; gap: 0.875rem;
+    font-size: 0.9rem; color: var(--slate);
+  }
+  .contact-item-icon {
+    width: 38px; height: 38px; border-radius: 10px;
+    background: var(--copper-pale); color: var(--copper);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; flex-shrink: 0;
+  }
+  .contact-form-wrap {
+    background: #fff; border: 1px solid var(--border);
+    border-radius: 20px; padding: 2.5rem;
+    box-shadow: var(--shadow);
+  }
+  .contact-form-wrap h3 {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1.2rem; margin-bottom: 0.4rem; color: var(--ink);
+  }
+  .contact-form-wrap > p { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.75rem; }
+  .light-group label { color: var(--text-muted) !important; }
+  .light-group input, .light-group select, .light-group textarea {
+    background: var(--warm-white) !important;
+    border: 1px solid var(--border) !important;
+    color: var(--ink) !important;
+  }
+  .light-group input::placeholder, .light-group textarea::placeholder { color: #aaa !important; }
+  .light-group select option { background: #fff; color: var(--ink); }
+  .light-group input:focus, .light-group select:focus, .light-group textarea:focus { border-color: var(--copper) !important; }
+  .btn-submit-light {
+    width: 100%; background: var(--copper); color: #fff;
+    padding: 1rem; border-radius: 8px; border: none;
+    font-size: 1rem; font-weight: 600; cursor: pointer;
+    margin-top: 0.75rem;
+    transition: background 0.2s, transform 0.15s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .btn-submit-light:hover { background: var(--copper-light); transform: translateY(-1px); }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--ink); color: rgba(255,255,255,0.5);
+    padding: 3rem clamp(1.5rem, 5vw, 4rem);
+    text-align: center;
+  }
+  .footer-inner { max-width: 1120px; margin: 0 auto; }
+  .footer-logo {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1.1rem; color: #fff; margin-bottom: 0.75rem;
+  }
+  .footer-logo span { color: var(--copper); }
+  footer p { font-size: 0.82rem; line-height: 1.7; }
+  .footer-links { display: flex; gap: 1.5rem; justify-content: center; margin: 1.25rem 0; flex-wrap: wrap; }
+  .footer-links a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.82rem; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--copper-light); }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    #home { grid-template-columns: 1fr; }
+    .hero-right { display: none; }
+    .audience-grid { grid-template-columns: 1fr; }
+    .steps-grid { grid-template-columns: 1fr 1fr; }
+    .steps-grid::before { display: none; }
+    .rfp-grid { grid-template-columns: 1fr 1fr; }
+    .contractor-layout { grid-template-columns: 1fr; }
+    .contact-layout { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    nav .nav-links { display: none; }
+  }
+  @media (max-width: 600px) {
+    .steps-grid { grid-template-columns: 1fr; }
+    .rfp-grid { grid-template-columns: 1fr; }
+    .hero-stats { flex-wrap: wrap; gap: 1.5rem; }
+  }
+
+  /* ─── MODAL ─── */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(26,26,46,0.7); backdrop-filter: blur(4px);
+    z-index: 200; align-items: center; justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: #fff; border-radius: 20px;
+    padding: 2.5rem; max-width: 500px; width: 90%;
+    box-shadow: var(--shadow-lg);
+    position: relative;
+  }
+  .modal-close {
+    position: absolute; top: 1.25rem; right: 1.25rem;
+    background: var(--cream); border: none; border-radius: 50%;
+    width: 32px; height: 32px; cursor: pointer;
+    font-size: 1rem; color: var(--slate);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .modal h3 {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1.3rem; margin-bottom: 0.5rem;
+  }
+  .modal p { font-size: 0.875rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+
+  /* Toast */
+  .toast {
+    position: fixed; bottom: 2rem; right: 2rem;
+    background: var(--ink); color: #fff;
+    padding: 1rem 1.5rem; border-radius: 10px;
+    font-size: 0.875rem; font-weight: 500;
+    box-shadow: var(--shadow-lg);
+    display: none; z-index: 300;
+    animation: fadeUp 0.3s;
+  }
+  .toast.show { display: block; }
+  .toast span { color: var(--copper-light); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#home" class="nav-logo">
+    <div class="nav-logo-mark">I</div>
+    <span class="nav-logo-text">Inductra <span>Building Systems</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#about">Why Inductra</a></li>
+    <li><a href="#how-it-works">How It Works</a></li>
+    <li><a href="#rfps">Active RFPs</a></li>
+    <li><a href="#contractors">Contractors</a></li>
+    <li><a href="#contact" class="nav-cta">Start a Project</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="home">
+  <div class="hero-left">
+    <div class="hero-eyebrow">Procurement Advisory for Mission-Driven Organizations</div>
+    <h1 class="hero-h1">Capital Projects, Done <em>Right</em> — Without the Politics</h1>
+    <p class="hero-sub">Inductra Building Systems manages your entire RFP process — from scope development through contractor selection — so your leadership stays focused on your mission, not the job site.</p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-primary">Start a Project →</a>
+      <a href="#how-it-works" class="btn-secondary">How It Works</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <span class="stat-num">0%</span>
+        <span class="stat-label">Cost to your organization</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">100%</span>
+        <span class="stat-label">Process independence</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">Faith &amp; Ed</span>
+        <span class="stat-label">Focused expertise</span>
+      </div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-visual">
+      <div class="process-card">
+        <div class="process-card-title">Active Project — PRJ-003</div>
+        <div class="process-step">
+          <div class="step-num">1</div>
+          <div class="step-text">
+            <strong>Scope Defined</strong>
+            <span>Building envelope assessment complete</span>
+          </div>
+        </div>
+        <div class="process-step">
+          <div class="step-num">2</div>
+          <div class="step-text">
+            <strong>RFP Published</strong>
+            <span>Qualified contractors notified</span>
+          </div>
+        </div>
+        <div class="process-step" style="opacity:0.5;">
+          <div class="step-num">3</div>
+          <div class="step-text">
+            <strong>Bid Review</strong>
+            <span>Awaiting submission deadline</span>
+          </div>
+        </div>
+        <div class="process-step" style="opacity:0.3;">
+          <div class="step-num">4</div>
+          <div class="step-text">
+            <strong>Award &amp; Execute</strong>
+            <span>Contract issued by Inductra</span>
+          </div>
+        </div>
+        <div class="badge-row">
+          <span class="badge">Roofing</span>
+          <span class="badge copper">Church</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY INDUCTRA -->
+<section id="about">
+  <div class="section-inner">
+    <div class="section-eyebrow">Who We Serve</div>
+    <h2 class="section-h2">Built for both sides of the table</h2>
+    <p class="section-sub">Whether you're a parish trying to replace a roof or a contractor looking for qualified institutional clients, Inductra makes the process cleaner, faster, and fair.</p>
+
+    <div class="audience-grid">
+      <div class="audience-card faith">
+        <div class="audience-icon">⛪</div>
+        <h3>Churches &amp; Schools</h3>
+        <p>Your leadership team shouldn't have to navigate bids, vendors, or contractor disputes. We handle the entire procurement process independently — protecting you from parishioner pressure, informal relationships, and procurement missteps.</p>
+        <ul class="benefit-list">
+          <li>No fees — Inductra is paid by the awarded contractor</li>
+          <li>Insulated leadership from vendor relationships</li>
+          <li>Technically qualified scope development</li>
+          <li>Transparent, documented bid process</li>
+          <li>Ongoing project oversight &amp; compliance</li>
+          <li>Schools, dioceses, and multi-site portfolios welcome</li>
+        </ul>
+      </div>
+      <div class="audience-card contractor">
+        <div class="audience-icon">🏗</div>
+        <h3>Contractors &amp; Vendors</h3>
+        <p>Gain access to a steady pipeline of pre-qualified institutional projects. All RFPs are structured, scoped, and managed professionally — so you spend time bidding, not chasing decisions or navigating internal church politics.</p>
+        <ul class="benefit-list">
+          <li>Access to vetted, funded capital projects</li>
+          <li>Clear, complete scopes — no ambiguity</li>
+          <li>Fair, documented selection criteria</li>
+          <li>Straightforward fee structure (% of contract)</li>
+          <li>Faster decisions, professional clients</li>
+          <li>Build your institutional portfolio</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how-it-works">
+  <div class="section-inner">
+    <div class="section-eyebrow">The Process</div>
+    <h2 class="section-h2">From idea to completed project</h2>
+    <p class="section-sub">A disciplined four-step process that brings technical rigor and procurement integrity to every capital project — regardless of size.</p>
+
+    <div class="steps-grid">
+      <div class="how-step">
+        <div class="step-circle">📋</div>
+        <h4>Intake &amp; Scope</h4>
+        <p>We meet with your team, assess the project, and develop a complete technical scope of work — on your behalf, at no charge.</p>
+        <span class="step-tag">Weeks 1–2</span>
+      </div>
+      <div class="how-step">
+        <div class="step-circle">📢</div>
+        <h4>RFP Publication</h4>
+        <p>Your project is published to our contractor network with specifications, timelines, and evaluation criteria fully defined.</p>
+        <span class="step-tag">Weeks 3–4</span>
+      </div>
+      <div class="how-step">
+        <div class="step-circle">⚖️</div>
+        <h4>Bid Review &amp; Recommendation</h4>
+        <p>We evaluate all submissions on technical merit, qualifications, and price — then present a clear recommendation with documentation.</p>
+        <span class="step-tag">Weeks 5–6</span>
+      </div>
+      <div class="how-step">
+        <div class="step-circle">🏁</div>
+        <h4>Award &amp; Oversight</h4>
+        <p>Contract is executed, Inductra collects its fee from the contractor, and we provide oversight through project completion.</p>
+        <span class="step-tag">Ongoing</span>
+      </div>
+    </div>
+
+    <div class="fee-note">
+      <div class="fee-icon">💡</div>
+      <div>
+        <h4>Zero-Cost Model for Organizations</h4>
+        <p>Inductra charges <strong>no fees to churches, schools, or faith-based organizations</strong>. Our advisory fee is a percentage of the awarded contract value, paid directly by the winning contractor. Your organization receives professional procurement management at no cost — and contractors benefit from access to qualified, pre-approved institutional projects.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ACTIVE RFPs -->
+<section id="rfps">
+  <div class="section-inner">
+    <div class="section-eyebrow">Open Opportunities</div>
+    <h2 class="section-h2">Active RFPs</h2>
+    <p class="section-sub">Current open bid opportunities for qualified contractors. Registration required to access full project specifications and submit proposals.</p>
+
+    <div class="rfp-filters">
+      <button class="filter-btn active" onclick="filterRFPs('all', this)">All Projects</button>
+      <button class="filter-btn" onclick="filterRFPs('roofing', this)">Roofing</button>
+      <button class="filter-btn" onclick="filterRFPs('paving', this)">Paving</button>
+      <button class="filter-btn" onclick="filterRFPs('hvac', this)">HVAC</button>
+      <button class="filter-btn" onclick="filterRFPs('electrical', this)">Electrical</button>
+    </div>
+
+    <div class="rfp-grid" id="rfp-grid">
+
+      <div class="rfp-card" data-category="roofing">
+        <div class="rfp-header">
+          <span class="rfp-category cat-roofing">Roofing</span>
+          <span class="rfp-status status-open">Open</span>
+        </div>
+        <h4>Main Sanctuary Roof Replacement</h4>
+        <div class="rfp-org">St. Catherine Parish — Wichita, KS</div>
+        <div class="rfp-meta">
+          <div class="rfp-meta-item"><span>Est. Value</span>$180,000–$240,000</div>
+          <div class="rfp-meta-item"><span>Deadline</span>May 15, 2026</div>
+        </div>
+        <div class="rfp-card-footer">
+          <span class="rfp-scope">FiberTite membrane · 22,000 SF</span>
+          <button class="btn-rfp" onclick="openRFPModal('PRJ-001')">View RFP →</button>
+        </div>
+      </div>
+
+      <div class="rfp-card" data-category="paving">
+        <div class="rfp-header">
+          <span class="rfp-category cat-paving">Paving</span>
+          <span class="rfp-status status-open">Open</span>
+        </div>
+        <h4>Parking Lot Reconstruction</h4>
+        <div class="rfp-org">Church of the Magdalene — Wichita, KS</div>
+        <div class="rfp-meta">
+          <div class="rfp-meta-item"><span>Est. Value</span>$95,000–$130,000</div>
+          <div class="rfp-meta-item"><span>Deadline</span>May 22, 2026</div>
+        </div>
+        <div class="rfp-card-footer">
+          <span class="rfp-scope">Full-depth reclaim · 85 spaces</span>
+          <button class="btn-rfp" onclick="openRFPModal('PRJ-002')">View RFP →</button>
+        </div>
+      </div>
+
+      <div class="rfp-card" data-category="hvac">
+        <div class="rfp-header">
+          <span class="rfp-category cat-hvac">HVAC</span>
+          <span class="rfp-status status-open">Open</span>
+        </div>
+        <h4>Gymnasium HVAC Replacement</h4>
+        <div class="rfp-org">Holy Cross Catholic School — Derby, KS</div>
+        <div class="rfp-meta">
+          <div class="rfp-meta-item"><span>Est. Value</span>$75,000–$110,000</div>
+          <div class="rfp-meta-item"><span>Deadline</span>June 3, 2026</div>
+        </div>
+        <div class="rfp-card-footer">
+          <span class="rfp-scope">Rooftop units · 3 zones</span>
+          <button class="btn-rfp" onclick="openRFPModal('PRJ-003')">View RFP →</button>
+        </div>
+      </div>
+
+      <div class="rfp-card" data-category="roofing">
+        <div class="rfp-header">
+          <span class="rfp-category cat-roofing">Roofing</span>
+          <span class="rfp-status status-open">Open</span>
+        </div>
+        <h4>Fellowship Hall Re-Roofing</h4>
+        <div class="rfp-org">First Presbyterian Church — Newton, KS</div>
+        <div class="rfp-meta">
+          <div class="rfp-meta-item"><span>Est. Value</span>$55,000–$80,000</div>
+          <div class="rfp-meta-item"><span>Deadline</span>June 10, 2026</div>
+        </div>
+        <div class="rfp-card-footer">
+          <span class="rfp-scope">TPO membrane · 8,500 SF</span>
+          <button class="btn-rfp" onclick="openRFPModal('PRJ-004')">View RFP →</button>
+        </div>
+      </div>
+
+      <div class="rfp-card" data-category="electrical">
+        <div class="rfp-header">
+          <span class="rfp-category cat-electrical">Electrical</span>
+          <span class="rfp-status status-open">Open</span>
+        </div>
+        <h4>Electrical Panel Upgrade &amp; Lighting</h4>
+        <div class="rfp-org">St. Joseph School — Wichita, KS</div>
+        <div class="rfp-meta">
+          <div class="rfp-meta-item"><span>Est. Value</span>$40,000–$65,000</div>
+          <div class="rfp-meta-item"><span>Deadline</span>June 18, 2026</div>
+        </div>
+        <div class="rfp-card-footer">
+          <span class="rfp-scope">400A service · LED retrofit</span>
+          <button class="btn-rfp" onclick="openRFPModal('PRJ-005')">View RFP →</button>
+        </div>
+      </div>
+
+      <div class="rfp-card" data-category="paving">
+        <div class="rfp-header">
+          <span class="rfp-category cat-paving">Paving</span>
+          <span class="rfp-status status-closed">Closed</span>
+        </div>
+        <h4>Drive &amp; Walkway Resurfacing</h4>
+        <div class="rfp-org">Grace Lutheran Church — Andover, KS</div>
+        <div class="rfp-meta">
+          <div class="rfp-meta-item"><span>Est. Value</span>$28,000–$42,000</div>
+          <div class="rfp-meta-item"><span>Closed</span>Apr 18, 2026</div>
+        </div>
+        <div class="rfp-card-footer">
+          <span class="rfp-scope">Award pending</span>
+          <button class="btn-rfp" style="background:var(--text-muted); cursor:default;">Closed</button>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="rfp-cta-row">
+      <p>Don't see your project type listed? New RFPs are published weekly.</p>
+      <a href="#contact" class="btn-primary">Submit a Project for RFP →</a>
+    </div>
+  </div>
+</section>
+
+<!-- CONTRACTOR PORTAL -->
+<section id="contractors">
+  <div class="section-inner">
+    <div class="contractor-layout">
+      <div class="contractor-left">
+        <div class="section-eyebrow">Contractor Network</div>
+        <h2 class="section-h2">Join the Inductra Contractor Network</h2>
+        <p class="section-sub">Get access to a curated pipeline of institutional projects. All projects are professionally scoped, funded, and managed — no chasing invoices or navigating unprepared clients.</p>
+
+        <div class="contractor-perks">
+          <div class="perk-row">
+            <div class="perk-icon">📁</div>
+            <div class="perk-text">
+              <strong>Pre-Qualified Projects</strong>
+              <span>Every RFP is issued by an organization that has completed intake and is ready to proceed. No tire kickers.</span>
+            </div>
+          </div>
+          <div class="perk-row">
+            <div class="perk-icon">📐</div>
+            <div class="perk-text">
+              <strong>Technical Scopes, Professionally Written</strong>
+              <span>Complete drawings, specs, and scope documents — so you bid accurately and win the work you can perform profitably.</span>
+            </div>
+          </div>
+          <div class="perk-row">
+            <div class="perk-icon">⚡</div>
+            <div class="perk-text">
+              <strong>Fast Decisions</strong>
+              <span>Inductra manages the client relationship and drives the award decision. Typical award within 10 business days of bid close.</span>
+            </div>
+          </div>
+          <div class="perk-row">
+            <div class="perk-icon">💼</div>
+            <div class="perk-text">
+              <strong>Simple Fee Structure</strong>
+              <span>Inductra's advisory fee is a percentage of the awarded contract value — transparent, predictable, and only due upon award.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="reg-form">
+        <h3>Contractor Registration</h3>
+        <p>Complete this form to access full RFP specifications and join our bid notification list.</p>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Company Name *</label>
+            <input type="text" placeholder="ABC Roofing Co.">
+          </div>
+          <div class="form-group">
+            <label>Primary Contact *</label>
+            <input type="text" placeholder="Full name">
+          </div>
+          <div class="form-group">
+            <label>Email *</label>
+            <input type="email" placeholder="contact@company.com">
+          </div>
+          <div class="form-group">
+            <label>Phone</label>
+            <input type="tel" placeholder="(316) 555-0100">
+          </div>
+          <div class="form-group full">
+            <label>Primary Trade / Specialty *</label>
+            <select>
+              <option value="" disabled selected>Select your primary trade</option>
+              <option>Roofing</option>
+              <option>Paving / Concrete</option>
+              <option>HVAC</option>
+              <option>Electrical</option>
+              <option>General Contractor</option>
+              <option>Plumbing</option>
+              <option>Masonry / Tuckpointing</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group full">
+            <label>Service Area</label>
+            <input type="text" placeholder="e.g. South-Central Kansas, Wichita Metro">
+          </div>
+          <div class="form-group full">
+            <label>Licenses &amp; Certifications</label>
+            <input type="text" placeholder="e.g. KS General Contractor License #12345, GAF Certified...">
+          </div>
+          <div class="form-group full">
+            <label>Project Types You Bid</label>
+            <div class="checkbox-group">
+              <label class="checkbox-item"><input type="checkbox"> Churches &amp; Houses of Worship</label>
+              <label class="checkbox-item"><input type="checkbox"> Catholic/Private Schools</label>
+              <label class="checkbox-item"><input type="checkbox"> Multi-Site Institutional</label>
+              <label class="checkbox-item"><input type="checkbox"> Historically Significant Buildings</label>
+            </div>
+          </div>
+        </div>
+        <button class="btn-submit" onclick="submitForm('contractor')">Register &amp; Access RFPs →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT / START A PROJECT -->
+<section id="contact">
+  <div class="section-inner">
+    <div class="contact-layout">
+      <div class="contact-info">
+        <div class="section-eyebrow">Get Started</div>
+        <h3>Ready to protect your next capital project?</h3>
+        <p>Whether you're planning a roof replacement, parking lot reconstruction, HVAC overhaul, or multi-phase campus improvement, Inductra can manage the entire procurement process — at no cost to your organization.</p>
+        <p>Tell us about your project and we'll schedule a no-obligation intake call within two business days.</p>
+        <div class="contact-details">
+          <div class="contact-item">
+            <div class="contact-item-icon">📍</div>
+            <span>Wichita, Kansas · Serving South-Central KS &amp; Regional</span>
+          </div>
+          <div class="contact-item">
+            <div class="contact-item-icon">✉️</div>
+            <span>info@inductrabuildingsystems.com</span>
+          </div>
+          <div class="contact-item">
+            <div class="contact-item-icon">🕐</div>
+            <span>Response within 2 business days</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-form-wrap">
+        <h3>Start a Project</h3>
+        <p>Tell us about your organization and what you're looking to accomplish.</p>
+        <div class="form-row">
+          <div class="form-group light-group">
+            <label>Organization Name *</label>
+            <input type="text" placeholder="St. Catherine Parish">
+          </div>
+          <div class="form-group light-group">
+            <label>Organization Type</label>
+            <select>
+              <option value="" disabled selected>Select...</option>
+              <option>Catholic Parish</option>
+              <option>Protestant Church</option>
+              <option>Catholic School</option>
+              <option>Private/Faith School</option>
+              <option>Diocese / Archdiocese</option>
+              <option>Other Nonprofit</option>
+            </select>
+          </div>
+          <div class="form-group light-group">
+            <label>Your Name *</label>
+            <input type="text" placeholder="Full name">
+          </div>
+          <div class="form-group light-group">
+            <label>Your Role</label>
+            <input type="text" placeholder="Pastor, Business Manager...">
+          </div>
+          <div class="form-group light-group">
+            <label>Email *</label>
+            <input type="email" placeholder="you@yourchurch.org">
+          </div>
+          <div class="form-group light-group">
+            <label>Phone</label>
+            <input type="tel" placeholder="(316) 555-0100">
+          </div>
+          <div class="form-group light-group full">
+            <label>Project Type</label>
+            <select>
+              <option value="" disabled selected>What kind of project?</option>
+              <option>Roofing</option>
+              <option>Paving / Parking Lot</option>
+              <option>HVAC</option>
+              <option>Electrical</option>
+              <option>Multi-Trade / Campus</option>
+              <option>Not Sure Yet</option>
+            </select>
+          </div>
+          <div class="form-group light-group full">
+            <label>Project Description</label>
+            <textarea placeholder="Briefly describe what needs to be done, approximate size or scope, and any timeline considerations..."></textarea>
+          </div>
+        </div>
+        <button class="btn-submit-light" onclick="submitForm('contact')">Submit Project Inquiry →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">Inductra <span>Building Systems</span> LLC</div>
+    <div class="footer-links">
+      <a href="#about">Why Inductra</a>
+      <a href="#how-it-works">How It Works</a>
+      <a href="#rfps">Active RFPs</a>
+      <a href="#contractors">Contractors</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <p>Procurement advisory for churches, schools, and faith-based organizations. Wichita, Kansas.<br>
+    Inductra Building Systems LLC &copy; 2026. All rights reserved. Fee charged to awarded contractor only.</p>
+  </div>
+</footer>
+
+<!-- RFP MODAL -->
+<div class="modal-overlay" id="rfp-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h3 id="modal-title">Project Details</h3>
+    <p id="modal-body"></p>
+    <a href="#contractors" class="btn-primary" onclick="closeModal()" style="display:inline-block;margin-top:0.5rem;">Register to Access Full RFP →</a>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span id="toast-msg">✓ Submitted successfully</span> — we'll be in touch shortly.
+</div>
+
+<script>
+  // Filter RFPs
+  function filterRFPs(cat, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.rfp-card').forEach(card => {
+      card.style.display = (cat === 'all' || card.dataset.category === cat) ? 'flex' : 'none';
+    });
+  }
+
+  // RFP Modal data
+  const rfpData = {
+    'PRJ-001': {
+      title: 'PRJ-001 · Sanctuary Roof Replacement — St. Catherine Parish',
+      body: 'Full replacement of main sanctuary roof. Scope includes removal of existing 3-ply built-up system, installation of FiberTite KEE membrane over new insulation, and all associated flashing. Est. 22,000 SF. Pre-bid walk scheduled. Full specifications, drawings, and evaluation criteria available upon contractor registration.'
+    },
+    'PRJ-002': {
+      title: 'PRJ-002 · Parking Lot Reconstruction — Church of the Magdalene',
+      body: 'Full-depth reclaim and reconstruction of primary parking facility. 85 spaces plus drive lanes. Scope includes milling, base repair, new binder and surface course, striping, and ADA compliance upgrades. Full specifications and geotech report available upon contractor registration.'
+    },
+    'PRJ-003': {
+      title: 'PRJ-003 · Gymnasium HVAC Replacement — Holy Cross Catholic School',
+      body: 'Replacement of (3) aging rooftop units serving the gymnasium and adjacent corridors. Includes ductwork modifications, controls upgrade, and commissioning. School-year scheduling constraints apply. Full mechanical drawings available upon contractor registration.'
+    },
+    'PRJ-004': {
+      title: 'PRJ-004 · Fellowship Hall Re-Roofing — First Presbyterian',
+      body: 'Re-roofing of fellowship hall addition. TPO membrane over existing substrate with new edge metal and penetration flashings. Approximately 8,500 SF. Coordination with active building use required. Full specifications available upon contractor registration.'
+    },
+    'PRJ-005': {
+      title: 'PRJ-005 · Electrical Panel Upgrade — St. Joseph School',
+      body: 'Service upgrade from 200A to 400A, panel replacement, and LED lighting retrofit for classrooms and common areas. Work to be performed during summer break. Full electrical drawings and load calculations available upon contractor registration.'
+    }
+  };
+
+  function openRFPModal(id) {
+    const d = rfpData[id];
+    document.getElementById('modal-title').textContent = d.title;
+    document.getElementById('modal-body').textContent = d.body;
+    document.getElementById('rfp-modal').classList.add('open');
+  }
+
+  function closeModal() {
+    document.getElementById('rfp-modal').classList.remove('open');
+  }
+
+  document.getElementById('rfp-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  // Form submit
+  function submitForm(type) {
+    const msg = type === 'contractor' ? 'Registration received' : 'Project inquiry received';
+    document.getElementById('toast-msg').textContent = '✓ ' + msg;
+    const t = document.getElementById('toast');
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 4000);
+  }
+
+  // Scroll animation
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.audience-card, .rfp-card, .perk-row, .fee-note').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(16px)';
+    el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>
