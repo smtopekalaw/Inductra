@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inductra Admin — RFP Management</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1a2e; --slate: #2d3748; --warm-white: #fdfaf6; --cream: #f5f0e8;
+    --copper: #b5651d; --copper-light: #d4843a; --copper-pale: #f0e0cc;
+    --sage: #4a7c6f; --sage-pale: #ddf0eb; --sand: #e8dcc8;
+    --text-muted: #6b7280; --border: #e2d9cc;
+    --shadow: 0 4px 24px rgba(26,26,46,0.08);
+    --shadow-lg: 0 16px 48px rgba(26,26,46,0.14);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--ink); min-height: 100vh; }
+
+  /* LOGIN */
+  #login-screen {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    background: var(--ink);
+  }
+  .login-box {
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px; padding: 3rem; width: 380px; text-align: center;
+  }
+  .login-logo {
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1.5rem;
+  }
+  .login-box h2 { font-family: 'Libre Baskerville', serif; color: #fff; margin-bottom: 0.4rem; }
+  .login-box p { font-size: 0.85rem; color: rgba(255,255,255,0.5); margin-bottom: 2rem; }
+  .login-box input {
+    width: 100%; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px; padding: 0.875rem 1rem; color: #fff; font-size: 0.95rem;
+    font-family: 'DM Sans', sans-serif; outline: none; margin-bottom: 1rem;
+    transition: border-color 0.2s;
+  }
+  .login-box input:focus { border-color: var(--copper); }
+  .login-box input::placeholder { color: rgba(255,255,255,0.3); }
+  .login-btn {
+    width: 100%; background: var(--copper); color: #fff; border: none;
+    padding: 0.875rem; border-radius: 8px; font-size: 0.95rem; font-weight: 600;
+    cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background 0.2s;
+  }
+  .login-btn:hover { background: var(--copper-light); }
+  .login-error { color: #ff6b6b; font-size: 0.82rem; margin-top: 0.75rem; display: none; }
+
+  /* ADMIN LAYOUT */
+  #admin-screen { display: none; }
+  .admin-nav {
+    background: var(--ink); padding: 0 2rem; height: 86px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .admin-nav-logo {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .admin-nav-logo svg { height: 54px; width: auto; display: block; }
+  .admin-badge {
+    background: var(--copper-pale); color: var(--copper); border: 1px solid var(--copper);
+    padding: 0.2rem 0.75rem; border-radius: 100px; font-size: 0.7rem; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .logout-btn {
+    background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.7);
+    border: 1px solid rgba(255,255,255,0.12); padding: 0.4rem 1rem;
+    border-radius: 6px; font-size: 0.8rem; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; transition: all 0.2s;
+  }
+  .logout-btn:hover { background: rgba(255,255,255,0.15); color: #fff; }
+
+  .admin-body { max-width: 1100px; margin: 0 auto; padding: 2.5rem 2rem; }
+
+  /* STATS ROW */
+  .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; margin-bottom: 2.5rem; }
+  .stat-card {
+    background: #fff; border: 1px solid var(--border); border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+  }
+  .stat-card-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.5rem; }
+  .stat-card-num { font-family: 'Libre Baskerville', serif; font-size: 2rem; color: var(--copper); }
+
+  /* TWO COL LAYOUT */
+  .admin-grid { display: grid; grid-template-columns: 1fr 1.6fr; gap: 2rem; align-items: start; }
+
+  /* FORM PANEL */
+  .panel {
+    background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 1.75rem;
+    box-shadow: var(--shadow);
+  }
+  .panel-title {
+    font-family: 'Libre Baskerville', serif; font-size: 1.1rem; margin-bottom: 0.25rem;
+  }
+  .panel-sub { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+  .form-group { display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 1rem; }
+  .form-group label { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); }
+  .form-group input, .form-group select, .form-group textarea {
+    background: var(--warm-white); border: 1px solid var(--border);
+    border-radius: 8px; padding: 0.7rem 0.875rem; color: var(--ink);
+    font-size: 0.875rem; font-family: 'DM Sans', sans-serif; outline: none;
+    transition: border-color 0.2s;
+  }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--copper); }
+  .form-group textarea { resize: vertical; min-height: 70px; }
+  .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+  .btn-add {
+    width: 100%; background: var(--copper); color: #fff; border: none;
+    padding: 0.875rem; border-radius: 8px; font-size: 0.95rem; font-weight: 600;
+    cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background 0.2s;
+    margin-top: 0.5rem;
+  }
+  .btn-add:hover { background: var(--copper-light); }
+  .btn-update {
+    width: 100%; background: var(--sage); color: #fff; border: none;
+    padding: 0.875rem; border-radius: 8px; font-size: 0.95rem; font-weight: 600;
+    cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background 0.2s;
+    margin-top: 0.5rem; display: none;
+  }
+  .btn-update:hover { background: #3d6b5f; }
+  .btn-cancel-edit {
+    width: 100%; background: transparent; color: var(--text-muted);
+    border: 1px solid var(--border); padding: 0.6rem; border-radius: 8px;
+    font-size: 0.85rem; cursor: pointer; font-family: 'DM Sans', sans-serif;
+    margin-top: 0.5rem; display: none; transition: all 0.2s;
+  }
+  .btn-cancel-edit:hover { border-color: var(--copper); color: var(--copper); }
+
+  /* RFP LIST */
+  .rfp-list { display: flex; flex-direction: column; gap: 1rem; }
+  .rfp-list-item {
+    background: #fff; border: 1px solid var(--border); border-radius: 12px;
+    padding: 1.25rem 1.5rem; display: flex; align-items: flex-start;
+    justify-content: space-between; gap: 1rem;
+    transition: box-shadow 0.2s;
+  }
+  .rfp-list-item:hover { box-shadow: var(--shadow); }
+  .rfp-list-item.editing { border-color: var(--sage); box-shadow: 0 0 0 3px rgba(74,124,111,0.15); }
+  .rfp-item-left { flex: 1; }
+  .rfp-item-top { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.4rem; flex-wrap: wrap; }
+  .rfp-item-id { font-size: 0.7rem; font-weight: 700; color: var(--text-muted); letter-spacing: 0.08em; text-transform: uppercase; }
+  .rfp-cat-tag {
+    font-size: 0.68rem; font-weight: 700; padding: 0.15rem 0.6rem;
+    border-radius: 100px; letter-spacing: 0.06em; text-transform: uppercase;
+  }
+  .tag-roofing { background: var(--copper-pale); color: var(--copper); }
+  .tag-paving { background: var(--sage-pale); color: var(--sage); }
+  .tag-hvac { background: #e8edf5; color: #3b5b9c; }
+  .tag-electrical { background: #f5f0d8; color: #8a7020; }
+  .tag-other { background: var(--cream); color: var(--slate); }
+  .status-dot {
+    width: 7px; height: 7px; border-radius: 50%; display: inline-block; margin-right: 3px;
+  }
+  .dot-open { background: var(--sage); }
+  .dot-closed { background: var(--text-muted); }
+  .rfp-item-title { font-family: 'Libre Baskerville', serif; font-size: 0.95rem; color: var(--ink); margin-bottom: 0.2rem; }
+  .rfp-item-org { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.4rem; }
+  .rfp-item-meta { display: flex; gap: 1.25rem; }
+  .rfp-item-meta span { font-size: 0.75rem; color: var(--slate); }
+  .rfp-item-meta span em { color: var(--text-muted); font-style: normal; font-size: 0.68rem; display: block; text-transform: uppercase; letter-spacing: 0.05em; }
+  .rfp-item-actions { display: flex; flex-direction: column; gap: 0.5rem; flex-shrink: 0; }
+  .btn-edit {
+    background: var(--cream); color: var(--slate); border: 1px solid var(--border);
+    padding: 0.4rem 1rem; border-radius: 6px; font-size: 0.78rem; font-weight: 600;
+    cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .btn-edit:hover { background: var(--sage-pale); border-color: var(--sage); color: var(--sage); }
+  .btn-delete {
+    background: #fff5f5; color: #c53030; border: 1px solid #feb2b2;
+    padding: 0.4rem 1rem; border-radius: 6px; font-size: 0.78rem; font-weight: 600;
+    cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .btn-delete:hover { background: #fed7d7; }
+  .btn-toggle-status {
+    background: var(--warm-white); color: var(--text-muted); border: 1px solid var(--border);
+    padding: 0.4rem 1rem; border-radius: 6px; font-size: 0.75rem; font-weight: 500;
+    cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .btn-toggle-status:hover { border-color: var(--copper); color: var(--copper); }
+
+  .empty-state {
+    text-align: center; padding: 3rem; color: var(--text-muted);
+    background: #fff; border: 1px dashed var(--border); border-radius: 12px;
+  }
+  .empty-state p { font-size: 0.9rem; }
+
+  /* EXPORT */
+  .export-row {
+    display: flex; gap: 1rem; margin-top: 1.5rem; padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+  .btn-export {
+    background: var(--ink); color: #fff; border: none;
+    padding: 0.6rem 1.25rem; border-radius: 8px; font-size: 0.82rem; font-weight: 600;
+    cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background 0.2s;
+  }
+  .btn-export:hover { background: var(--slate); }
+  .btn-export-csv {
+    background: var(--sage); color: #fff; border: none;
+    padding: 0.6rem 1.25rem; border-radius: 8px; font-size: 0.82rem; font-weight: 600;
+    cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background 0.2s;
+  }
+  .btn-export-csv:hover { background: #3d6b5f; }
+
+  /* TOAST */
+  .toast {
+    position: fixed; bottom: 2rem; right: 2rem;
+    background: var(--ink); color: #fff; padding: 1rem 1.5rem;
+    border-radius: 10px; font-size: 0.875rem; font-weight: 500;
+    box-shadow: var(--shadow-lg); display: none; z-index: 300;
+  }
+  .toast.show { display: block; animation: fadeUp 0.3s; }
+  .toast .t-green { color: #68d391; }
+  .toast .t-red { color: #fc8181; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* SECTION HEADER */
+  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; }
+  .section-header h3 { font-family: 'Libre Baskerville', serif; font-size: 1.1rem; }
+  .section-header span { font-size: 0.8rem; color: var(--text-muted); }
+
+  @media (max-width: 800px) {
+    .admin-grid { grid-template-columns: 1fr; }
+    .stats-row { grid-template-columns: 1fr 1fr; }
+    .form-row-2 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">
+      <svg viewBox="0 0 94 90" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:56px;width:auto;">
+        <polygon points="10,72 52,32 62,42 20,82" fill="#3a4a5c" opacity="0.7"/>
+        <polygon points="28,72 70,32 80,42 38,82" fill="#2d3a4a" opacity="0.85"/>
+        <polygon points="58,18 90,52 58,52" fill="#3a6fa8"/>
+        <polygon points="58,18 90,52 70,52 58,30" fill="#4d8bc4"/>
+        <polygon points="68,44 94,70 94,82 68,82" fill="#b5651d"/>
+        <polygon points="68,44 94,70 84,70 68,52" fill="#d4843a"/>
+      </svg>
+    </div>
+    <h2>Inductra Admin</h2>
+    <p>RFP Management Portal</p>
+    <input type="password" id="pw-input" placeholder="Enter admin password" onkeydown="if(event.key==='Enter') checkLogin()">
+    <button class="login-btn" onclick="checkLogin()">Sign In →</button>
+    <div class="login-error" id="login-error">Incorrect password. Try again.</div>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div id="admin-screen">
+  <nav class="admin-nav">
+    <div class="admin-nav-logo">
+      <svg viewBox="0 0 420 90" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Inductra Building Systems logo">
+        <polygon points="10,72 52,32 62,42 20,82" fill="#3a4a5c" opacity="0.7"/>
+        <polygon points="28,72 70,32 80,42 38,82" fill="#2d3a4a" opacity="0.85"/>
+        <polygon points="58,18 90,52 58,52" fill="#3a6fa8"/>
+        <polygon points="58,18 90,52 70,52 58,30" fill="#4d8bc4"/>
+        <polygon points="68,44 94,70 94,82 68,82" fill="#b5651d"/>
+        <polygon points="68,44 94,70 84,70 68,52" fill="#d4843a"/>
+        <text x="105" y="52" font-family="Arial Black, sans-serif" font-weight="900" font-size="38" letter-spacing="3" fill="#ffffff">INDUCTRA</text>
+        <line x1="105" y1="60" x2="415" y2="60" stroke="#b5651d" stroke-width="1.5"/>
+        <text x="107" y="78" font-family="Arial, sans-serif" font-weight="700" font-size="15" letter-spacing="4" fill="#b5651d">BUILDING SYSTEMS LLC</text>
+      </svg>
+      <span class="admin-badge">Admin</span>
+    </div>
+    <button class="logout-btn" onclick="logout()">Sign Out</button>
+  </nav>
+
+  <div class="admin-body">
+
+    <!-- STATS -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-card-label">Total RFPs</div>
+        <div class="stat-card-num" id="stat-total">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-label">Open</div>
+        <div class="stat-card-num" id="stat-open" style="color:var(--sage)">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-label">Closed</div>
+        <div class="stat-card-num" id="stat-closed" style="color:var(--text-muted)">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-label">Est. Total Value</div>
+        <div class="stat-card-num" id="stat-value" style="font-size:1.3rem">$0</div>
+      </div>
+    </div>
+
+    <div class="admin-grid">
+
+      <!-- ADD/EDIT FORM -->
+      <div class="panel">
+        <div class="panel-title" id="form-title">Add New RFP</div>
+        <div class="panel-sub" id="form-sub">Fill in the project details below.</div>
+
+        <input type="hidden" id="edit-id">
+
+        <div class="form-group">
+          <label>Project Title *</label>
+          <input type="text" id="f-title" placeholder="e.g. Main Sanctuary Roof Replacement">
+        </div>
+        <div class="form-group">
+          <label>Organization Name *</label>
+          <input type="text" id="f-org" placeholder="e.g. St. Catherine Parish">
+        </div>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>Location</label>
+            <input type="text" id="f-location" placeholder="Wichita, KS">
+          </div>
+          <div class="form-group">
+            <label>Category *</label>
+            <select id="f-category">
+              <option value="">Select...</option>
+              <option value="roofing">Roofing</option>
+              <option value="paving">Paving</option>
+              <option value="hvac">HVAC</option>
+              <option value="electrical">Electrical</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>Est. Value Low ($)</label>
+            <input type="number" id="f-val-low" placeholder="50000">
+          </div>
+          <div class="form-group">
+            <label>Est. Value High ($)</label>
+            <input type="number" id="f-val-high" placeholder="80000">
+          </div>
+        </div>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>Bid Deadline</label>
+            <input type="date" id="f-deadline">
+          </div>
+          <div class="form-group">
+            <label>Status</label>
+            <select id="f-status">
+              <option value="open">Open</option>
+              <option value="closed">Closed</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Scope Summary</label>
+          <input type="text" id="f-scope" placeholder="e.g. FiberTite membrane · 22,000 SF">
+        </div>
+        <div class="form-group">
+          <label>Notes (internal only)</label>
+          <textarea id="f-notes" placeholder="Any internal notes about this project..."></textarea>
+        </div>
+
+        <button class="btn-add" id="btn-add-rfp" onclick="addRFP()">Add RFP →</button>
+        <button class="btn-update" id="btn-update-rfp" onclick="updateRFP()">Save Changes →</button>
+        <button class="btn-cancel-edit" id="btn-cancel-edit" onclick="cancelEdit()">Cancel Edit</button>
+      </div>
+
+      <!-- RFP LIST -->
+      <div>
+        <div class="section-header">
+          <h3>Active Project Board</h3>
+          <span id="rfp-count">0 projects</span>
+        </div>
+        <div class="rfp-list" id="rfp-list">
+          <div class="empty-state"><p>No RFPs yet. Add your first project using the form.</p></div>
+        </div>
+
+        <div class="export-row">
+          <button class="btn-export" onclick="exportJSON()">⬇ Export JSON</button>
+          <button class="btn-export-csv" onclick="exportCSV()">⬇ Export CSV</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><span id="toast-msg"></span></div>
+
+<script>
+  const ADMIN_PASSWORD = 'inductra2026';
+  const STORAGE_KEY = 'inductra_rfps';
+
+  // ── AUTH ──
+  function checkLogin() {
+    const pw = document.getElementById('pw-input').value;
+    if (pw === ADMIN_PASSWORD) {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('admin-screen').style.display = 'block';
+      loadRFPs();
+    } else {
+      document.getElementById('login-error').style.display = 'block';
+      document.getElementById('pw-input').value = '';
+    }
+  }
+  function logout() {
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('admin-screen').style.display = 'none';
+    document.getElementById('pw-input').value = '';
+  }
+
+  // ── STORAGE ──
+  function getRFPs() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || getDefaultRFPs(); }
+    catch { return getDefaultRFPs(); }
+  }
+  function saveRFPs(rfps) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(rfps));
+  }
+  function getDefaultRFPs() {
+    return [
+      { id: 'PRJ-001', title: 'Main Sanctuary Roof Replacement', org: 'St. Catherine Parish', location: 'Wichita, KS', category: 'roofing', valLow: 180000, valHigh: 240000, deadline: '2026-05-15', status: 'open', scope: 'FiberTite membrane · 22,000 SF', notes: '', created: Date.now() },
+      { id: 'PRJ-002', title: 'Parking Lot Reconstruction', org: 'Church of the Magdalene', location: 'Wichita, KS', category: 'paving', valLow: 95000, valHigh: 130000, deadline: '2026-05-22', status: 'open', scope: 'Full-depth reclaim · 85 spaces', notes: '', created: Date.now() },
+      { id: 'PRJ-003', title: 'Gymnasium HVAC Replacement', org: 'Holy Cross Catholic School', location: 'Derby, KS', category: 'hvac', valLow: 75000, valHigh: 110000, deadline: '2026-06-03', status: 'open', scope: 'Rooftop units · 3 zones', notes: '', created: Date.now() },
+    ];
+  }
+
+  // ── NEXT ID ──
+  function nextID(rfps) {
+    const nums = rfps.map(r => parseInt(r.id.replace('PRJ-', ''))).filter(n => !isNaN(n));
+    const max = nums.length ? Math.max(...nums) : 0;
+    return 'PRJ-' + String(max + 1).padStart(3, '0');
+  }
+
+  // ── FORMAT ──
+  function fmtMoney(n) {
+    if (!n) return '—';
+    return '$' + Number(n).toLocaleString();
+  }
+  function fmtDate(d) {
+    if (!d) return '—';
+    const [y, m, day] = d.split('-');
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return `${months[parseInt(m)-1]} ${parseInt(day)}, ${y}`;
+  }
+  function catClass(c) {
+    const map = { roofing: 'tag-roofing', paving: 'tag-paving', hvac: 'tag-hvac', electrical: 'tag-electrical', other: 'tag-other' };
+    return map[c] || 'tag-other';
+  }
+  function catLabel(c) {
+    return c ? c.charAt(0).toUpperCase() + c.slice(1) : 'Other';
+  }
+
+  // ── RENDER ──
+  function loadRFPs() {
+    const rfps = getRFPs();
+    if (!localStorage.getItem(STORAGE_KEY)) saveRFPs(rfps);
+    renderList(rfps);
+    updateStats(rfps);
+  }
+
+  function renderList(rfps) {
+    const list = document.getElementById('rfp-list');
+    document.getElementById('rfp-count').textContent = rfps.length + ' project' + (rfps.length !== 1 ? 's' : '');
+    if (!rfps.length) {
+      list.innerHTML = '<div class="empty-state"><p>No RFPs yet. Add your first project using the form.</p></div>';
+      return;
+    }
+    list.innerHTML = rfps.map(r => `
+      <div class="rfp-list-item" id="item-${r.id}">
+        <div class="rfp-item-left">
+          <div class="rfp-item-top">
+            <span class="rfp-item-id">${r.id}</span>
+            <span class="rfp-cat-tag ${catClass(r.category)}">${catLabel(r.category)}</span>
+            <span style="font-size:0.75rem;color:${r.status==='open'?'var(--sage)':'var(--text-muted)'}">
+              <span class="status-dot ${r.status==='open'?'dot-open':'dot-closed'}"></span>
+              ${r.status === 'open' ? 'Open' : 'Closed'}
+            </span>
+          </div>
+          <div class="rfp-item-title">${r.title}</div>
+          <div class="rfp-item-org">${r.org}${r.location ? ' — ' + r.location : ''}</div>
+          <div class="rfp-item-meta">
+            <span><em>Est. Value</em>${fmtMoney(r.valLow)}–${fmtMoney(r.valHigh)}</span>
+            <span><em>Deadline</em>${fmtDate(r.deadline)}</span>
+            ${r.scope ? `<span><em>Scope</em>${r.scope}</span>` : ''}
+          </div>
+          ${r.notes ? `<div style="margin-top:0.5rem;font-size:0.75rem;color:var(--text-muted);font-style:italic;">Note: ${r.notes}</div>` : ''}
+        </div>
+        <div class="rfp-item-actions">
+          <button class="btn-edit" onclick="editRFP('${r.id}')">✏ Edit</button>
+          <button class="btn-toggle-status" onclick="toggleStatus('${r.id}')">${r.status === 'open' ? 'Close RFP' : 'Reopen'}</button>
+          <button class="btn-delete" onclick="deleteRFP('${r.id}')">✕ Delete</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function updateStats(rfps) {
+    const open = rfps.filter(r => r.status === 'open').length;
+    const closed = rfps.filter(r => r.status === 'closed').length;
+    const totalVal = rfps.reduce((sum, r) => sum + (Number(r.valHigh) || 0), 0);
+    document.getElementById('stat-total').textContent = rfps.length;
+    document.getElementById('stat-open').textContent = open;
+    document.getElementById('stat-closed').textContent = closed;
+    document.getElementById('stat-value').textContent = totalVal ? '$' + (totalVal/1000).toFixed(0) + 'K+' : '$0';
+  }
+
+  // ── ADD ──
+  function addRFP() {
+    const title = document.getElementById('f-title').value.trim();
+    const org = document.getElementById('f-org').value.trim();
+    const category = document.getElementById('f-category').value;
+    if (!title || !org || !category) { showToast('Please fill in Title, Organization, and Category.', 'red'); return; }
+
+    const rfps = getRFPs();
+    const newRFP = {
+      id: nextID(rfps),
+      title, org,
+      location: document.getElementById('f-location').value.trim(),
+      category,
+      valLow: parseInt(document.getElementById('f-val-low').value) || 0,
+      valHigh: parseInt(document.getElementById('f-val-high').value) || 0,
+      deadline: document.getElementById('f-deadline').value,
+      status: document.getElementById('f-status').value,
+      scope: document.getElementById('f-scope').value.trim(),
+      notes: document.getElementById('f-notes').value.trim(),
+      created: Date.now()
+    };
+    rfps.unshift(newRFP);
+    saveRFPs(rfps);
+    renderList(rfps);
+    updateStats(rfps);
+    clearForm();
+    showToast(`✓ ${newRFP.id} added successfully`, 'green');
+  }
+
+  // ── EDIT ──
+  function editRFP(id) {
+    const rfps = getRFPs();
+    const r = rfps.find(x => x.id === id);
+    if (!r) return;
+    document.getElementById('edit-id').value = id;
+    document.getElementById('f-title').value = r.title;
+    document.getElementById('f-org').value = r.org;
+    document.getElementById('f-location').value = r.location || '';
+    document.getElementById('f-category').value = r.category;
+    document.getElementById('f-val-low').value = r.valLow || '';
+    document.getElementById('f-val-high').value = r.valHigh || '';
+    document.getElementById('f-deadline').value = r.deadline || '';
+    document.getElementById('f-status').value = r.status;
+    document.getElementById('f-scope').value = r.scope || '';
+    document.getElementById('f-notes').value = r.notes || '';
+    document.getElementById('form-title').textContent = 'Edit RFP — ' + id;
+    document.getElementById('form-sub').textContent = 'Update the fields below and save.';
+    document.getElementById('btn-add-rfp').style.display = 'none';
+    document.getElementById('btn-update-rfp').style.display = 'block';
+    document.getElementById('btn-cancel-edit').style.display = 'block';
+    document.querySelectorAll('.rfp-list-item').forEach(el => el.classList.remove('editing'));
+    const el = document.getElementById('item-' + id);
+    if (el) el.classList.add('editing');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function updateRFP() {
+    const id = document.getElementById('edit-id').value;
+    const title = document.getElementById('f-title').value.trim();
+    const org = document.getElementById('f-org').value.trim();
+    const category = document.getElementById('f-category').value;
+    if (!title || !org || !category) { showToast('Please fill in Title, Organization, and Category.', 'red'); return; }
+
+    const rfps = getRFPs();
+    const idx = rfps.findIndex(x => x.id === id);
+    if (idx === -1) return;
+    rfps[idx] = { ...rfps[idx], title, org,
+      location: document.getElementById('f-location').value.trim(),
+      category,
+      valLow: parseInt(document.getElementById('f-val-low').value) || 0,
+      valHigh: parseInt(document.getElementById('f-val-high').value) || 0,
+      deadline: document.getElementById('f-deadline').value,
+      status: document.getElementById('f-status').value,
+      scope: document.getElementById('f-scope').value.trim(),
+      notes: document.getElementById('f-notes').value.trim(),
+    };
+    saveRFPs(rfps);
+    renderList(rfps);
+    updateStats(rfps);
+    cancelEdit();
+    showToast(`✓ ${id} updated`, 'green');
+  }
+
+  function cancelEdit() {
+    clearForm();
+    document.getElementById('edit-id').value = '';
+    document.getElementById('form-title').textContent = 'Add New RFP';
+    document.getElementById('form-sub').textContent = 'Fill in the project details below.';
+    document.getElementById('btn-add-rfp').style.display = 'block';
+    document.getElementById('btn-update-rfp').style.display = 'none';
+    document.getElementById('btn-cancel-edit').style.display = 'none';
+    document.querySelectorAll('.rfp-list-item').forEach(el => el.classList.remove('editing'));
+  }
+
+  // ── DELETE ──
+  function deleteRFP(id) {
+    if (!confirm(`Delete ${id}? This cannot be undone.`)) return;
+    const rfps = getRFPs().filter(r => r.id !== id);
+    saveRFPs(rfps);
+    renderList(rfps);
+    updateStats(rfps);
+    showToast(`${id} deleted`, 'red');
+  }
+
+  // ── TOGGLE STATUS ──
+  function toggleStatus(id) {
+    const rfps = getRFPs();
+    const r = rfps.find(x => x.id === id);
+    if (!r) return;
+    r.status = r.status === 'open' ? 'closed' : 'open';
+    saveRFPs(rfps);
+    renderList(rfps);
+    updateStats(rfps);
+    showToast(`${id} marked ${r.status}`, 'green');
+  }
+
+  // ── CLEAR ──
+  function clearForm() {
+    ['f-title','f-org','f-location','f-val-low','f-val-high','f-deadline','f-scope','f-notes'].forEach(id => {
+      document.getElementById(id).value = '';
+    });
+    document.getElementById('f-category').value = '';
+    document.getElementById('f-status').value = 'open';
+  }
+
+  // ── EXPORT ──
+  function exportJSON() {
+    const rfps = getRFPs();
+    const blob = new Blob([JSON.stringify(rfps, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+    a.download = 'inductra-rfps-' + new Date().toISOString().split('T')[0] + '.json';
+    a.click();
+    showToast('✓ JSON exported', 'green');
+  }
+
+  function exportCSV() {
+    const rfps = getRFPs();
+    const headers = ['ID','Title','Organization','Location','Category','Value Low','Value High','Deadline','Status','Scope','Notes'];
+    const rows = rfps.map(r => [r.id, r.title, r.org, r.location, r.category, r.valLow, r.valHigh, r.deadline, r.status, r.scope, r.notes].map(v => `"${(v||'').toString().replace(/"/g,'""')}"`).join(','));
+    const csv = [headers.join(','), ...rows].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+    a.download = 'inductra-rfps-' + new Date().toISOString().split('T')[0] + '.csv';
+    a.click();
+    showToast('✓ CSV exported — open in Excel or Google Sheets', 'green');
+  }
+
+  // ── TOAST ──
+  function showToast(msg, type) {
+    const t = document.getElementById('toast');
+    const m = document.getElementById('toast-msg');
+    m.className = type === 'green' ? 't-green' : 't-red';
+    m.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3500);
+  }
+</script>
+</body>
+</html>
