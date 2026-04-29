@@ -82,13 +82,13 @@
 
   /* ─── LOGO ─── */
   .nav-logo-text { display: none; }
-  .logo-mark svg { height: 80px; width: auto; display: block; }
-  nav { height: 100px; padding-top: 0.5rem; padding-bottom: 0.5rem; }
+  .logo-mark svg { height: 54px; width: auto; display: block; }
+  nav { height: 86px; padding-top: 0.5rem; padding-bottom: 0.5rem; }
 
   /* ─── HERO ─── */
   #home {
     min-height: 100vh;
-    padding: 68px 0 0;
+    padding: 86px 0 0;
     display: grid;
     grid-template-columns: 1fr 1fr;
     position: relative;
@@ -175,18 +175,71 @@
   }
   .hero-right-bg {
     position: absolute; inset: 0; z-index: 0;
-    display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr;
-    gap: 3px; opacity: 0.85;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 62% 38%, rgba(255,255,255,0.32), transparent 36%),
+      linear-gradient(135deg, #d9cfbd 0%, #efe5d5 100%);
+    pointer-events: none;
   }
-  .hero-right-bg .bg-panel {
+  .project-slide {
+    position: absolute; inset: 0;
+    opacity: 0;
+    transform: scale(1.04);
+    animation: projectFade 40s infinite ease-in-out;
+    will-change: opacity, transform;
+  }
+  .project-slide:nth-child(1) { animation-delay: 0s; animation-name: projectFadeFirst; }
+  .project-slide:nth-child(2) { animation-delay: 5s; }
+  .project-slide:nth-child(3) { animation-delay: 10s; }
+  .project-slide:nth-child(4) { animation-delay: 15s; }
+  .project-slide:nth-child(5) { animation-delay: 20s; }
+  .project-slide:nth-child(6) { animation-delay: 25s; }
+  .project-slide:nth-child(7) { animation-delay: 30s; }
+  .project-slide:nth-child(8) { animation-delay: 35s; }
+  .project-scene {
+    position: absolute; inset: 0;
     width: 100%; height: 100%;
+    border: none; border-radius: 0; overflow: hidden;
+    box-shadow: none; background: transparent;
+    backdrop-filter: none; transform: none;
+  }
+  .project-scene svg { width: 100%; height: 100%; display: block; opacity: 0.97; }
+  .project-label {
+    position: absolute;
+    left: clamp(1.25rem, 4vw, 2.5rem);
+    top: clamp(1.25rem, 4vw, 2.5rem);
+    background: rgba(253,250,246,0.90);
+    border: 1px solid rgba(181,101,29,0.35);
+    border-radius: 999px;
+    color: var(--ink);
+    font-size: 0.76rem; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 0.55rem 0.95rem;
+    box-shadow: 0 8px 28px rgba(26,26,46,0.12);
+  }
+  @keyframes projectFadeFirst {
+    0%   { opacity: 1; transform: scale(1); }
+    10%  { opacity: 1; transform: scale(1.02); }
+    12%  { opacity: 0; transform: scale(1.04); }
+    100% { opacity: 0; transform: scale(1.04); }
+  }
+  @keyframes projectFade {
+    0%   { opacity: 0; transform: scale(1.04); }
+    2%   { opacity: 1; transform: scale(1); }
+    10%  { opacity: 1; transform: scale(1.02); }
+    12%  { opacity: 0; transform: scale(1.04); }
+    100% { opacity: 0; transform: scale(1.04); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .project-slide { animation: none; }
+    .project-slide:first-child { opacity: 1; transform: scale(1); }
   }
   .hero-right::after {
     content: '';
     position: absolute; inset: 0; z-index: 1;
-    background: linear-gradient(135deg,
-      rgba(232,223,208,0.45) 0%,
-      rgba(232,223,208,0.2) 100%);
+    background:
+      radial-gradient(circle at 50% 42%, rgba(253,250,246,0.08), transparent 38%),
+      linear-gradient(135deg, rgba(232,223,208,0.20) 0%, rgba(26,26,46,0.16) 100%);
   }
   .hero-right::before { display: none; }
   .hero-visual {
@@ -516,6 +569,8 @@
   .status-open::before { content: '●'; font-size: 0.6rem; }
   .status-closed { color: var(--text-muted); }
   .status-closed::before { content: '●'; font-size: 0.6rem; }
+  .status-complete { color: var(--sage); }
+  .status-complete::before { content: '●'; font-size: 0.6rem; }
   .rfp-card h4 {
     font-family: 'Libre Baskerville', serif;
     font-size: 1.05rem; margin-bottom: 0.35rem; color: var(--ink);
@@ -757,7 +812,7 @@
   <ul class="nav-links">
     <li><a href="#about">Why Inductra</a></li>
     <li><a href="#how-it-works">How It Works</a></li>
-    <li><a href="#rfps">Active RFPs</a></li>
+    <li><a href="#rfps">Projects</a></li>
     <li><a href="#contractors">Contractors</a></li>
     <li><a href="#contact" class="nav-cta">Start a Project</a></li>
   </ul>
@@ -783,8 +838,8 @@
     </div>
     <div class="hero-stats">
       <div class="stat-item">
-        <span class="stat-num">0%</span>
-        <span class="stat-label">Cost to your organization</span>
+        <span class="stat-num">No</span>
+        <span class="stat-label">Upfront or advisory fee to your organization</span>
       </div>
       <div class="stat-item">
         <span class="stat-num">100%</span>
@@ -797,102 +852,163 @@
     </div>
   </div>
   <div class="hero-right">
-    <div class="hero-right-bg">
-      <!-- Cathedral -->
-      <svg class="bg-panel" viewBox="0 0 300 250" xmlns="http://www.w3.org/2000/svg">
-        <rect width="300" height="250" fill="#d4c9b8"/>
-        <rect x="0" y="200" width="300" height="50" fill="#c4b8a4"/>
-        <!-- Main tower -->
-        <polygon points="150,15 105,95 195,95" fill="#8a9aaa"/>
-        <polygon points="150,15 135,95 165,95" fill="#6a8aaa"/>
-        <rect x="105" y="95" width="90" height="155" fill="#9aaaba"/>
-        <!-- Side towers -->
-        <polygon points="70,55 45,125 95,125" fill="#7a8a9a"/>
-        <polygon points="230,55 205,125 255,125" fill="#7a8a9a"/>
-        <rect x="45" y="125" width="50" height="125" fill="#8a9aaa"/>
-        <rect x="205" y="125" width="50" height="125" fill="#8a9aaa"/>
-        <!-- Windows -->
-        <rect x="135" y="115" width="30" height="50" rx="15" fill="#c8d8e8" opacity="0.7"/>
-        <rect x="57" y="140" width="26" height="38" rx="13" fill="#c8d8e8" opacity="0.6"/>
-        <rect x="217" y="140" width="26" height="38" rx="13" fill="#c8d8e8" opacity="0.6"/>
-        <!-- Cross -->
-        <rect x="147" y="0" width="6" height="22" fill="#b5651d"/>
-        <rect x="139" y="8" width="22" height="5" fill="#b5651d"/>
-        <!-- Ground line -->
-        <rect x="0" y="225" width="300" height="25" fill="#b8a898"/>
-      </svg>
-      <!-- School -->
-      <svg class="bg-panel" viewBox="0 0 300 250" xmlns="http://www.w3.org/2000/svg">
-        <rect width="300" height="250" fill="#cdc3b2"/>
-        <rect x="0" y="210" width="300" height="40" fill="#bcb2a0"/>
-        <!-- Main building -->
-        <rect x="25" y="90" width="250" height="160" fill="#9aaaaa"/>
-        <polygon points="15,90 150,35 285,90" fill="#8a9a9a"/>
-        <!-- Windows row 1 -->
-        <rect x="45" y="110" width="45" height="55" fill="#c8dde8" opacity="0.8"/>
-        <rect x="128" y="110" width="45" height="55" fill="#c8dde8" opacity="0.8"/>
-        <rect x="210" y="110" width="45" height="55" fill="#c8dde8" opacity="0.8"/>
-        <!-- Door -->
-        <rect x="118" y="170" width="65" height="80" rx="3" fill="#7a8a8a"/>
-        <!-- Bell tower -->
-        <rect x="135" y="15" width="30" height="28" fill="#8a9a9a"/>
-        <rect x="128" y="10" width="44" height="8" fill="#7a8a8a"/>
-        <!-- Bell -->
-        <rect x="143" y="18" width="14" height="12" rx="7" fill="#b5651d" opacity="0.7"/>
-        <!-- Steps -->
-        <rect x="100" y="245" width="100" height="8" fill="#aaa090"/>
-        <rect x="110" y="240" width="80" height="6" fill="#b0a898"/>
-      </svg>
-      <!-- Office Building -->
-      <svg class="bg-panel" viewBox="0 0 300 250" xmlns="http://www.w3.org/2000/svg">
-        <rect width="300" height="250" fill="#c8bfb0"/>
-        <rect x="0" y="220" width="300" height="30" fill="#b8b0a0"/>
-        <!-- Center tower -->
-        <rect x="85" y="15" width="130" height="235" fill="#8a9898"/>
-        <!-- Side buildings -->
-        <rect x="20" y="75" width="65" height="175" fill="#7a8888"/>
-        <rect x="215" y="55" width="65" height="195" fill="#7a8888"/>
-        <!-- Window grid center -->
-        <rect x="95" y="25" width="20" height="28" fill="#c8dae0" opacity="0.8"/>
-        <rect x="122" y="25" width="20" height="28" fill="#c8dae0" opacity="0.8"/>
-        <rect x="149" y="25" width="20" height="28" fill="#c8dae0" opacity="0.8"/>
-        <rect x="176" y="25" width="20" height="28" fill="#c8dae0" opacity="0.8"/>
-        <rect x="95" y="62" width="20" height="28" fill="#c8dae0" opacity="0.7"/>
-        <rect x="122" y="62" width="20" height="28" fill="#b5651d" opacity="0.5"/>
-        <rect x="149" y="62" width="20" height="28" fill="#c8dae0" opacity="0.7"/>
-        <rect x="176" y="62" width="20" height="28" fill="#c8dae0" opacity="0.7"/>
-        <rect x="95" y="99" width="20" height="28" fill="#c8dae0" opacity="0.6"/>
-        <rect x="122" y="99" width="20" height="28" fill="#c8dae0" opacity="0.6"/>
-        <rect x="149" y="99" width="20" height="28" fill="#c8dae0" opacity="0.6"/>
-        <rect x="176" y="99" width="20" height="28" fill="#c8dae0" opacity="0.6"/>
-        <!-- Side windows -->
-        <rect x="30" y="90" width="18" height="22" fill="#c8dae0" opacity="0.6"/>
-        <rect x="55" y="90" width="18" height="22" fill="#c8dae0" opacity="0.6"/>
-        <rect x="225" y="70" width="18" height="22" fill="#c8dae0" opacity="0.6"/>
-        <rect x="250" y="70" width="18" height="22" fill="#c8dae0" opacity="0.6"/>
-      </svg>
-      <!-- Church with steeple -->
-      <svg class="bg-panel" viewBox="0 0 300 250" xmlns="http://www.w3.org/2000/svg">
-        <rect width="300" height="250" fill="#d0c4b0"/>
-        <rect x="0" y="215" width="300" height="35" fill="#c0b4a0"/>
-        <!-- Main nave -->
-        <rect x="60" y="110" width="180" height="140" fill="#9aaa9a"/>
-        <polygon points="50,110 150,50 250,110" fill="#8a9a8a"/>
-        <!-- Steeple -->
-        <rect x="125" y="20" width="50" height="38" fill="#9aaa9a"/>
-        <polygon points="115,20 150,0 185,20" fill="#8a9a8a"/>
-        <!-- Cross on steeple -->
-        <rect x="147" y="2" width="5" height="18" fill="#b5651d"/>
-        <rect x="140" y="8" width="20" height="4" fill="#b5651d"/>
-        <!-- Windows -->
-        <rect x="80" y="130" width="40" height="55" rx="20" fill="#c8dac8" opacity="0.75"/>
-        <rect x="180" y="130" width="40" height="55" rx="20" fill="#c8dac8" opacity="0.75"/>
-        <rect x="130" y="125" width="40" height="60" rx="20" fill="#c8dac8" opacity="0.8"/>
-        <!-- Door -->
-        <rect x="123" y="185" width="55" height="65" rx="27" fill="#7a8a7a"/>
-        <!-- Entrance steps -->
-        <rect x="105" y="245" width="90" height="7" fill="#aaa090"/>
-      </svg>
+    <div class="hero-right-bg" aria-hidden="true">
+      <div class="project-slide">
+        <div class="project-scene">
+          <svg viewBox="0 0 480 390" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+            <rect width="480" height="390" fill="#d7cbb9"/>
+            <rect x="0" y="324" width="480" height="66" fill="#b9aa96"/>
+            <polygon points="240,26 154,148 326,148" fill="#8393a0"/>
+            <rect x="154" y="148" width="172" height="176" fill="#9aabb6"/>
+            <polygon points="112,84 72,186 152,186" fill="#758897"/>
+            <rect x="72" y="186" width="80" height="138" fill="#899aa7"/>
+            <polygon points="368,84 328,186 408,186" fill="#758897"/>
+            <rect x="328" y="186" width="80" height="138" fill="#899aa7"/>
+            <rect x="218" y="176" width="44" height="78" rx="22" fill="#d6e3eb" opacity="0.75"/>
+            <rect x="108" y="210" width="34" height="54" rx="17" fill="#d6e3eb" opacity="0.65"/>
+            <rect x="338" y="210" width="34" height="54" rx="17" fill="#d6e3eb" opacity="0.65"/>
+            <rect x="236" y="0" width="8" height="34" fill="#b5651d"/>
+            <rect x="222" y="13" width="36" height="7" fill="#b5651d"/>
+          </svg>
+        </div>
+        <div class="project-label">Churches &amp; Cathedrals</div>
+      </div>
+      <div class="project-slide">
+        <div class="project-scene">
+          <svg viewBox="0 0 480 390" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+            <rect width="480" height="390" fill="#d2c7b6"/>
+            <rect x="0" y="330" width="480" height="60" fill="#b7ad9d"/>
+            <rect x="54" y="150" width="372" height="180" fill="#91a2a2"/>
+            <polygon points="38,150 240,70 442,150" fill="#7e9090"/>
+            <rect x="88" y="178" width="58" height="72" fill="#d0e1e6" opacity="0.82"/>
+            <rect x="211" y="178" width="58" height="72" fill="#d0e1e6" opacity="0.82"/>
+            <rect x="334" y="178" width="58" height="72" fill="#d0e1e6" opacity="0.82"/>
+            <rect x="200" y="260" width="80" height="70" fill="#748585"/>
+            <rect x="220" y="48" width="40" height="40" fill="#8a9b9b"/>
+            <rect x="210" y="38" width="60" height="12" fill="#748585"/>
+            <circle cx="240" cy="68" r="10" fill="#b5651d" opacity="0.75"/>
+          </svg>
+        </div>
+        <div class="project-label">Schools &amp; Education</div>
+      </div>
+      <div class="project-slide">
+        <div class="project-scene">
+          <svg viewBox="0 0 480 390" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+            <rect width="480" height="390" fill="#cfc5b7"/>
+            <rect x="0" y="340" width="480" height="50" fill="#b8ae9e"/>
+            <!-- Parking lot surface -->
+            <rect x="0" y="260" width="480" height="80" fill="#a0a08a"/>
+            <!-- Lot lines -->
+            <line x1="60" y1="260" x2="60" y2="340" stroke="#fff" stroke-width="2" opacity="0.6"/>
+            <line x1="120" y1="260" x2="120" y2="340" stroke="#fff" stroke-width="2" opacity="0.6"/>
+            <line x1="180" y1="260" x2="180" y2="340" stroke="#fff" stroke-width="2" opacity="0.6"/>
+            <line x1="240" y1="260" x2="240" y2="340" stroke="#fff" stroke-width="2" opacity="0.6"/>
+            <line x1="300" y1="260" x2="300" y2="340" stroke="#fff" stroke-width="2" opacity="0.6"/>
+            <line x1="360" y1="260" x2="360" y2="340" stroke="#fff" stroke-width="2" opacity="0.6"/>
+            <line x1="420" y1="260" x2="420" y2="340" stroke="#fff" stroke-width="2" opacity="0.6"/>
+            <!-- Drive lane -->
+            <rect x="0" y="225" width="480" height="35" fill="#8a8a74"/>
+            <!-- Church building -->
+            <rect x="80" y="80" width="320" height="148" fill="#9aaba6"/>
+            <polygon points="70,80 240,20 410,80" fill="#85968f"/>
+            <!-- Steeple -->
+            <rect x="215" y="0" width="50" height="28" fill="#9aaba6"/>
+            <polygon points="200,0 240,−18 280,0" fill="#85968f"/>
+            <rect x="237" y="−20" width="6" height="22" fill="#b5651d"/>
+            <rect x="228" y="−9" width="24" height="5" fill="#b5651d"/>
+            <!-- Windows -->
+            <rect x="115" y="98" width="50" height="72" rx="25" fill="#c8dde0" opacity="0.78"/>
+            <rect x="215" y="98" width="50" height="72" rx="25" fill="#c8dde0" opacity="0.78"/>
+            <rect x="315" y="98" width="50" height="72" rx="25" fill="#c8dde0" opacity="0.78"/>
+          </svg>
+        </div>
+        <div class="project-label">Paving &amp; Site Work</div>
+      </div>
+      <div class="project-slide">
+        <div class="project-scene">
+          <svg viewBox="0 0 480 390" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+            <rect width="480" height="390" fill="#c8bfb0"/>
+            <rect x="0" y="340" width="480" height="50" fill="#b0a898"/>
+            <!-- Tower center -->
+            <rect x="150" y="30" width="180" height="310" fill="#8a9898"/>
+            <!-- Side wings -->
+            <rect x="30" y="100" width="120" height="240" fill="#7a8888"/>
+            <rect x="330" y="80" width="120" height="260" fill="#7a8888"/>
+            <!-- Window grid center -->
+            <rect x="165" y="45" width="24" height="32" fill="#c8dae0" opacity="0.8"/>
+            <rect x="198" y="45" width="24" height="32" fill="#c8dae0" opacity="0.8"/>
+            <rect x="231" y="45" width="24" height="32" fill="#c8dae0" opacity="0.8"/>
+            <rect x="264" y="45" width="24" height="32" fill="#c8dae0" opacity="0.8"/>
+            <rect x="165" y="88" width="24" height="32" fill="#c8dae0" opacity="0.7"/>
+            <rect x="198" y="88" width="24" height="32" fill="#b5651d" opacity="0.55"/>
+            <rect x="231" y="88" width="24" height="32" fill="#c8dae0" opacity="0.7"/>
+            <rect x="264" y="88" width="24" height="32" fill="#c8dae0" opacity="0.7"/>
+            <rect x="165" y="131" width="24" height="32" fill="#c8dae0" opacity="0.6"/>
+            <rect x="198" y="131" width="24" height="32" fill="#c8dae0" opacity="0.6"/>
+            <rect x="231" y="131" width="24" height="32" fill="#c8dae0" opacity="0.6"/>
+            <rect x="264" y="131" width="24" height="32" fill="#c8dae0" opacity="0.6"/>
+            <!-- Side windows -->
+            <rect x="45" y="118" width="22" height="26" fill="#c8dae0" opacity="0.6"/>
+            <rect x="76" y="118" width="22" height="26" fill="#c8dae0" opacity="0.6"/>
+            <rect x="345" y="98" width="22" height="26" fill="#c8dae0" opacity="0.6"/>
+            <rect x="376" y="98" width="22" height="26" fill="#c8dae0" opacity="0.6"/>
+            <!-- HVAC units on roof -->
+            <rect x="170" y="20" width="40" height="16" rx="3" fill="#6a7878"/>
+            <rect x="225" y="20" width="40" height="16" rx="3" fill="#6a7878"/>
+            <rect x="280" y="20" width="40" height="16" rx="3" fill="#6a7878"/>
+          </svg>
+        </div>
+        <div class="project-label">Commercial &amp; Office</div>
+      </div>
+      <div class="project-slide">
+        <div class="project-scene">
+          <svg viewBox="0 0 480 390" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+            <rect width="480" height="390" fill="#d0c8b8"/>
+            <rect x="0" y="330" width="480" height="60" fill="#bab0a0"/>
+            <!-- Fellowship hall — low-pitched roof -->
+            <rect x="40" y="140" width="400" height="190" fill="#96a89a"/>
+            <polygon points="28,140 240,75 452,140" fill="#839289"/>
+            <!-- Windows row 1 -->
+            <rect x="66" y="158" width="68" height="90" rx="4" fill="#ccdee4" opacity="0.8"/>
+            <rect x="206" y="158" width="68" height="90" rx="4" fill="#ccdee4" opacity="0.8"/>
+            <rect x="346" y="158" width="68" height="90" rx="4" fill="#ccdee4" opacity="0.8"/>
+            <!-- Door -->
+            <rect x="205" y="255" width="70" height="75" rx="4" fill="#728080"/>
+            <!-- Roof surface highlight (re-roofing project) -->
+            <polygon points="28,140 240,75 452,140" fill="#b5651d" opacity="0.12"/>
+            <line x1="28" y1="140" x2="240" y2="75" stroke="#b5651d" stroke-width="1.5" opacity="0.4"/>
+            <line x1="452" y1="140" x2="240" y2="75" stroke="#b5651d" stroke-width="1.5" opacity="0.4"/>
+          </svg>
+        </div>
+        <div class="project-label">Roofing &amp; Building Envelope</div>
+      </div>
+      <div class="project-slide">
+        <div class="project-scene">
+          <svg viewBox="0 0 480 390" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+            <rect width="480" height="390" fill="#cec4b4"/>
+            <rect x="0" y="340" width="480" height="50" fill="#b8ae9e"/>
+            <!-- Campus main building -->
+            <rect x="60" y="100" width="360" height="240" fill="#8fa0a0"/>
+            <polygon points="48,100 240,40 432,100" fill="#7c8d8d"/>
+            <!-- Gymnasium annex -->
+            <rect x="340" y="168" width="140" height="172" fill="#8a9898"/>
+            <polygon points="330,168 410,118 490,168" fill="#788686"/>
+            <!-- HVAC equipment on gym roof -->
+            <rect x="350" y="110" width="45" height="18" rx="3" fill="#5a6a6a"/>
+            <rect x="410" y="110" width="45" height="18" rx="3" fill="#5a6a6a"/>
+            <!-- Ductwork lines -->
+            <line x1="372" y1="128" x2="372" y2="168" stroke="#4a5a5a" stroke-width="3" opacity="0.6"/>
+            <line x1="432" y1="128" x2="432" y2="168" stroke="#4a5a5a" stroke-width="3" opacity="0.6"/>
+            <!-- Main windows -->
+            <rect x="90" y="120" width="55" height="75" rx="4" fill="#c8dce0" opacity="0.78"/>
+            <rect x="213" y="120" width="55" height="75" rx="4" fill="#c8dce0" opacity="0.78"/>
+            <rect x="336" y="120" width="55" height="75" rx="4" fill="#c8dce0" opacity="0.78"/>
+            <!-- Door -->
+            <rect x="213" y="270" width="55" height="70" fill="#6a7a7a"/>
+          </svg>
+        </div>
+        <div class="project-label">HVAC &amp; Mechanical</div>
+      </div>
     </div>
     <div class="hero-visual">
       <div class="process-card">
@@ -1087,8 +1203,8 @@
     <div class="fee-note">
       <div class="fee-icon">💡</div>
       <div>
-        <h4>Zero-Cost Model for Organizations</h4>
-        <p>Inductra charges <strong>no fees to churches, schools, or faith-based organizations</strong>. Our advisory fee is a percentage of the awarded contract value, paid directly by the winning contractor. Your organization receives professional procurement management at no cost — and contractors benefit from access to qualified, pre-approved institutional projects.</p>
+        <h4>No Upfront or Advisory Fee to Your Organization</h4>
+        <p>Inductra charges <strong>no upfront or advisory fee to your organization</strong>. Our administrative fee is included in the awarded contract value and paid directly by the winning contractor. Your organization receives professional procurement management at no cost — and contractors benefit from access to qualified, pre-approved institutional projects.</p>
       </div>
     </div>
   </div>
@@ -1097,9 +1213,9 @@
 <!-- ACTIVE RFPs -->
 <section id="rfps">
   <div class="section-inner">
-    <div class="section-eyebrow">Open Opportunities</div>
-    <h2 class="section-h2">Active RFPs</h2>
-    <p class="section-sub">Current open bid opportunities for qualified contractors. Registration required to access full project specifications and submit proposals. All bids are strictly confidential.</p>
+    <div class="section-eyebrow">Representative Work</div>
+    <h2 class="section-h2">Representative Projects</h2>
+    <p class="section-sub">Illustrative project profiles showing the types of work Inductra can manage. Client-facing names below are representative placeholders, and each example is shown as a completed project.</p>
 
     <div class="rfp-filters">
       <button class="filter-btn active" onclick="filterRFPs('all', this)">All Projects</button>
@@ -1113,102 +1229,102 @@
       <div class="rfp-card" data-category="roofing">
         <div class="rfp-header">
           <span class="rfp-category cat-roofing">Roofing</span>
-          <span class="rfp-status status-open">Open</span>
+          <span class="rfp-status status-complete">Complete</span>
         </div>
         <h4>Main Sanctuary Roof Replacement</h4>
-        <div class="rfp-org">St. Catherine Parish — Wichita, KS</div>
+        <div class="rfp-org">Project Beacon — Worship Campus</div>
         <div class="rfp-meta">
           <div class="rfp-meta-item"><span>Est. Value</span>$180,000–$240,000</div>
-          <div class="rfp-meta-item"><span>Deadline</span>May 15, 2026</div>
+          <div class="rfp-meta-item"><span>Completed</span>May 15, 2026</div>
         </div>
         <div class="rfp-card-footer">
           <span class="rfp-scope">FiberTite membrane · 22,000 SF</span>
-          <button class="btn-rfp" onclick="openRFPModal('PRJ-001')">View RFP →</button>
+          <button class="btn-rfp" onclick="openRFPModal('PRJ-001')">View Project →</button>
         </div>
       </div>
 
       <div class="rfp-card" data-category="paving">
         <div class="rfp-header">
           <span class="rfp-category cat-paving">Paving</span>
-          <span class="rfp-status status-open">Open</span>
+          <span class="rfp-status status-complete">Complete</span>
         </div>
         <h4>Parking Lot Reconstruction</h4>
-        <div class="rfp-org">Church of the Magdalene — Wichita, KS</div>
+        <div class="rfp-org">Project Meridian — Community Campus</div>
         <div class="rfp-meta">
           <div class="rfp-meta-item"><span>Est. Value</span>$95,000–$130,000</div>
-          <div class="rfp-meta-item"><span>Deadline</span>May 22, 2026</div>
+          <div class="rfp-meta-item"><span>Completed</span>May 22, 2026</div>
         </div>
         <div class="rfp-card-footer">
           <span class="rfp-scope">Full-depth reclaim · 85 spaces</span>
-          <button class="btn-rfp" onclick="openRFPModal('PRJ-002')">View RFP →</button>
+          <button class="btn-rfp" onclick="openRFPModal('PRJ-002')">View Project →</button>
         </div>
       </div>
 
       <div class="rfp-card" data-category="hvac">
         <div class="rfp-header">
           <span class="rfp-category cat-hvac">HVAC</span>
-          <span class="rfp-status status-open">Open</span>
+          <span class="rfp-status status-complete">Complete</span>
         </div>
         <h4>Gymnasium HVAC Replacement</h4>
-        <div class="rfp-org">Holy Cross Catholic School — Derby, KS</div>
+        <div class="rfp-org">Project Northfield — Education Facility</div>
         <div class="rfp-meta">
           <div class="rfp-meta-item"><span>Est. Value</span>$75,000–$110,000</div>
-          <div class="rfp-meta-item"><span>Deadline</span>June 3, 2026</div>
+          <div class="rfp-meta-item"><span>Completed</span>June 3, 2026</div>
         </div>
         <div class="rfp-card-footer">
           <span class="rfp-scope">Rooftop units · 3 zones</span>
-          <button class="btn-rfp" onclick="openRFPModal('PRJ-003')">View RFP →</button>
+          <button class="btn-rfp" onclick="openRFPModal('PRJ-003')">View Project →</button>
         </div>
       </div>
 
       <div class="rfp-card" data-category="roofing">
         <div class="rfp-header">
           <span class="rfp-category cat-roofing">Roofing</span>
-          <span class="rfp-status status-open">Open</span>
+          <span class="rfp-status status-complete">Complete</span>
         </div>
         <h4>Fellowship Hall Re-Roofing</h4>
-        <div class="rfp-org">First Presbyterian Church — Newton, KS</div>
+        <div class="rfp-org">Project Hearthstone — Assembly Hall</div>
         <div class="rfp-meta">
           <div class="rfp-meta-item"><span>Est. Value</span>$55,000–$80,000</div>
-          <div class="rfp-meta-item"><span>Deadline</span>June 10, 2026</div>
+          <div class="rfp-meta-item"><span>Completed</span>June 10, 2026</div>
         </div>
         <div class="rfp-card-footer">
           <span class="rfp-scope">TPO membrane · 8,500 SF</span>
-          <button class="btn-rfp" onclick="openRFPModal('PRJ-004')">View RFP →</button>
+          <button class="btn-rfp" onclick="openRFPModal('PRJ-004')">View Project →</button>
         </div>
       </div>
 
       <div class="rfp-card" data-category="electrical">
         <div class="rfp-header">
           <span class="rfp-category cat-electrical">Electrical</span>
-          <span class="rfp-status status-open">Open</span>
+          <span class="rfp-status status-complete">Complete</span>
         </div>
         <h4>Electrical Panel Upgrade &amp; Lighting</h4>
-        <div class="rfp-org">St. Joseph School — Wichita, KS</div>
+        <div class="rfp-org">Project Lantern — Learning Center</div>
         <div class="rfp-meta">
           <div class="rfp-meta-item"><span>Est. Value</span>$40,000–$65,000</div>
-          <div class="rfp-meta-item"><span>Deadline</span>June 18, 2026</div>
+          <div class="rfp-meta-item"><span>Completed</span>June 18, 2026</div>
         </div>
         <div class="rfp-card-footer">
           <span class="rfp-scope">400A service · LED retrofit</span>
-          <button class="btn-rfp" onclick="openRFPModal('PRJ-005')">View RFP →</button>
+          <button class="btn-rfp" onclick="openRFPModal('PRJ-005')">View Project →</button>
         </div>
       </div>
 
       <div class="rfp-card" data-category="paving">
         <div class="rfp-header">
           <span class="rfp-category cat-paving">Paving</span>
-          <span class="rfp-status status-closed">Closed</span>
+          <span class="rfp-status status-complete">Complete</span>
         </div>
         <h4>Drive &amp; Walkway Resurfacing</h4>
-        <div class="rfp-org">Grace Lutheran Church — Andover, KS</div>
+        <div class="rfp-org">Project Stonebridge — Community Grounds</div>
         <div class="rfp-meta">
           <div class="rfp-meta-item"><span>Est. Value</span>$28,000–$42,000</div>
-          <div class="rfp-meta-item"><span>Closed</span>Apr 18, 2026</div>
+          <div class="rfp-meta-item"><span>Completed</span>Apr 18, 2026</div>
         </div>
         <div class="rfp-card-footer">
-          <span class="rfp-scope">Award pending</span>
-          <button class="btn-rfp" style="background:var(--text-muted); cursor:default;">Closed</button>
+          <span class="rfp-scope">Completed package</span>
+          <button class="btn-rfp" onclick="openRFPModal('PRJ-006')">View Project →</button>
         </div>
       </div>
     </div>
@@ -1432,9 +1548,9 @@
 <div class="modal-overlay" id="rfp-modal">
   <div class="modal">
     <button class="modal-close" onclick="closeModal()">✕</button>
-    <h3 id="modal-title">Project Details</h3>
+    <h3 id="modal-title">Project Snapshot</h3>
     <p id="modal-body"></p>
-    <a href="#contractors" class="btn-primary" onclick="closeModal()" style="display:inline-block;margin-top:0.5rem;">Register to Access Full RFP →</a>
+    <a href="#contractors" class="btn-primary" onclick="closeModal()" style="display:inline-block;margin-top:0.5rem;">Ask About Similar Work →</a>
   </div>
 </div>
 
@@ -1443,24 +1559,28 @@
 <script>
   const rfpData = {
     'PRJ-001': {
-      title: 'PRJ-001 · Sanctuary Roof Replacement — St. Catherine Parish',
-      body: 'Full replacement of main sanctuary roof. Scope includes removal of existing 3-ply built-up system, installation of FiberTite KEE membrane over new insulation, and all associated flashing. Est. 22,000 SF. Pre-bid walk scheduled. Full specifications, drawings, and evaluation criteria available upon contractor registration. All bids are strictly confidential.'
+      title: 'PRJ-001 · Project Beacon · Sanctuary Roof Replacement',
+      body: 'Representative completed project involving full replacement of a large sanctuary roof. Scope included removal of the existing roof system, installation of a new high-performance membrane assembly, insulation upgrades, and associated flashing details. This example reflects the type of structured roofing procurement Inductra can manage.'
     },
     'PRJ-002': {
-      title: 'PRJ-002 · Parking Lot Reconstruction — Church of the Magdalene',
-      body: 'Full-depth reclaim and reconstruction of primary parking facility. 85 spaces plus drive lanes. Scope includes milling, base repair, new binder and surface course, striping, and ADA compliance upgrades. Full specifications and geotech report available upon contractor registration. All bids are strictly confidential.'
+      title: 'PRJ-002 · Project Meridian · Parking Lot Reconstruction',
+      body: 'Representative completed paving project involving full-depth reclaim and reconstruction of a primary parking facility. Scope included milling, base repair, new paving, striping, and ADA compliance upgrades. This example reflects the type of site-work procurement Inductra can run from scope development through contractor selection.'
     },
     'PRJ-003': {
-      title: 'PRJ-003 · Gymnasium HVAC Replacement — Holy Cross Catholic School',
-      body: 'Replacement of (3) aging rooftop units serving the gymnasium and adjacent corridors. Includes ductwork modifications, controls upgrade, and commissioning. School-year scheduling constraints apply. Full mechanical drawings available upon contractor registration. All bids are strictly confidential.'
+      title: 'PRJ-003 · Project Northfield · Gymnasium HVAC Replacement',
+      body: 'Representative completed HVAC project involving replacement of aging rooftop equipment, ductwork modifications, controls upgrades, and final commissioning. This example reflects the type of mechanical-system procurement Inductra can coordinate for schools, nonprofits, and commercial facilities.'
     },
     'PRJ-004': {
-      title: 'PRJ-004 · Fellowship Hall Re-Roofing — First Presbyterian',
-      body: 'Re-roofing of fellowship hall addition. TPO membrane over existing substrate with new edge metal and penetration flashings. Approximately 8,500 SF. Full specifications available upon contractor registration. All bids are strictly confidential.'
+      title: 'PRJ-004 · Project Hearthstone · Fellowship Hall Re-Roofing',
+      body: 'Representative completed re-roofing project for an assembly and gathering space. Scope included membrane replacement, edge metal, and penetration flashing. This example reflects smaller-scale capital projects where owners want a fair, qualified, and professionally managed bid process.'
     },
     'PRJ-005': {
-      title: 'PRJ-005 · Electrical Panel Upgrade — St. Joseph School',
-      body: 'Service upgrade from 200A to 400A, panel replacement, and LED lighting retrofit for classrooms and common areas. Work to be performed during summer break. Full electrical drawings and load calculations available upon contractor registration. All bids are strictly confidential.'
+      title: 'PRJ-005 · Project Lantern · Electrical Panel Upgrade & Lighting',
+      body: 'Representative completed electrical project involving service upgrades, panel replacement, and LED lighting retrofit work. This example reflects the type of electrical procurement support Inductra can provide when a client needs technical scope definition and disciplined contractor competition.'
+    },
+    'PRJ-006': {
+      title: 'PRJ-006 · Project Stonebridge · Drive & Walkway Resurfacing',
+      body: 'Representative completed resurfacing project involving drive lanes, walkways, and associated site improvements. This example reflects the type of exterior restoration and paving work Inductra can manage for community campuses, businesses, and institutional owners.'
     }
   };
 
