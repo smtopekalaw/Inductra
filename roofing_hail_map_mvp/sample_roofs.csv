@@ -1,0 +1,9 @@
+property,address,lat,lon,roof_type,roof_age,insurer,warranty
+Warehouse A,100 N Market St Wichita KS,37.6876,-97.3376,TPO,14,Travelers,Yes
+Manufacturing Plant B,2500 S Hoover Rd Wichita KS,37.6208,-97.4112,Modified Bitumen,18,CNA,No
+Retail Center C,7700 E Kellogg Dr Wichita KS,37.6791,-97.2449,TPO,8,Zurich,Yes
+Church Campus D,3636 N Ridge Rd Wichita KS,37.7515,-97.4266,Shingle/Low Slope,21,Church Mutual,No
+Cold Storage E,6100 N Hydraulic Ave Wichita KS,37.7971,-97.3183,EPDM,16,FM Global,Yes
+Office Park F,2020 N Webb Rd Wichita KS,37.7211,-97.2263,PVC,6,Hartford,Yes
+School G,6501 W 21st St Wichita KS,37.7228,-97.4202,TPO,11,EMC,Yes
+Industrial H,4500 S West St Wichita KS,37.6069,-97.3882,Metal,20,Liberty Mutual,No

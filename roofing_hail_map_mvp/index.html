@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Roofing Hail Intelligence Map — MVP</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Roofing Hail Intelligence Map</h1>
+      <p>Storm-date hail reports + roof portfolio triage + inspection priority export</p>
+    </div>
+    <div class="badge">MVP v0.1</div>
+  </header>
+
+  <main>
+    <aside>
+      <section>
+        <h2>1. Storm Window</h2>
+        <label>Start UTC
+          <input id="startTime" type="datetime-local" value="2026-04-19T00:00">
+        </label>
+        <label>End UTC
+          <input id="endTime" type="datetime-local" value="2026-04-21T00:00">
+        </label>
+        <label>State
+          <select id="state">
+            <option value="KS" selected>Kansas</option>
+            <option value="OK">Oklahoma</option>
+            <option value="MO">Missouri</option>
+            <option value="NE">Nebraska</option>
+            <option value="TX">Texas</option>
+            <option value="ALL">All</option>
+          </select>
+        </label>
+        <button id="loadLSR">Load hail reports</button>
+        <p class="note">Uses Iowa State IEM archived NWS Local Storm Reports endpoint. These are point reports, not full radar swaths.</p>
+      </section>
+
+      <section>
+        <h2>2. Roof Portfolio</h2>
+        <input id="roofFile" type="file" accept=".csv" />
+        <button id="loadSampleRoofs">Load sample Wichita roofs</button>
+        <p class="note">CSV columns: property, address, lat, lon, roof_type, roof_age, insurer, warranty</p>
+      </section>
+
+      <section>
+        <h2>3. MESH / Hail Swath Layer</h2>
+        <input id="meshFile" type="file" accept=".geojson,.json" />
+        <button id="loadSampleMesh">Load sample hail swath</button>
+        <p class="note">Upload converted MRMS MESH GeoJSON polygons with property <code>hail_inches</code>. This is where true hail circumference/swath goes.</p>
+      </section>
+
+      <section>
+        <h2>4. Scoring Controls</h2>
+        <label>Inspection radius around LSRs, miles
+          <input id="radiusMiles" type="number" value="3" min="0.5" step="0.5">
+        </label>
+        <label>Priority hail threshold, inches
+          <input id="priorityThreshold" type="number" value="1.5" min="0.25" step="0.25">
+        </label>
+        <button id="scoreRoofs">Score roof portfolio</button>
+        <button id="exportCsv">Export inspection list</button>
+      </section>
+
+      <section>
+        <h2>Legend</h2>
+        <div class="legend-row"><span class="dot p1"></span> Priority 1 — likely ≥2.00" hail exposure</div>
+        <div class="legend-row"><span class="dot p2"></span> Priority 2 — likely 1.50–1.99" exposure</div>
+        <div class="legend-row"><span class="dot p3"></span> Priority 3 — near report/swath</div>
+        <div class="legend-row"><span class="dot p4"></span> Priority 4 — monitor</div>
+      </section>
+    </aside>
+
+    <section class="mapwrap">
+      <div id="map"></div>
+      <div id="summary">
+        <strong>Status:</strong> <span id="status">Ready. Load roofs and hail data.</span>
+      </div>
+      <div class="tablewrap">
+        <table id="resultsTable">
+          <thead>
+            <tr>
+              <th>Priority</th>
+              <th>Property</th>
+              <th>Est. Hail</th>
+              <th>Nearest Report</th>
+              <th>Roof</th>
+              <th>Age</th>
+              <th>Why</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
