@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
 <title>Inductra Admin — RFP Management</title>
 <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
 <style>
@@ -47,21 +48,38 @@
   }
   .login-btn:hover { background: var(--copper-light); }
   .login-error { color: #ff6b6b; font-size: 0.82rem; margin-top: 0.75rem; display: none; }
+  .login-hint { color: rgba(255,255,255,0.4); font-size: 0.7rem; margin-top: 1.25rem; line-height: 1.5; }
 
   /* ADMIN LAYOUT */
   #admin-screen { display: none; }
   .admin-nav {
-    background: var(--ink); padding: 0 2rem; height: 86px;
+    background: var(--ink); padding: 0 2rem; height: 60px;
     display: flex; align-items: center; justify-content: space-between;
     position: sticky; top: 0; z-index: 100;
   }
   .admin-nav-logo {
-    display: flex; align-items: center; gap: 12px;
+    font-family: 'Libre Baskerville', serif; color: #fff; font-size: 1rem;
+    display: flex; align-items: center; gap: 10px;
   }
-  .admin-nav-logo svg { height: 54px; width: auto; display: block; }
+  .admin-nav-logo span { color: var(--copper); }
   .admin-badge {
     background: var(--copper-pale); color: var(--copper); border: 1px solid var(--copper);
     padding: 0.2rem 0.75rem; border-radius: 100px; font-size: 0.7rem; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .nav-right { display: flex; align-items: center; gap: 0.75rem; }
+  .user-chip {
+    display: flex; align-items: center; gap: 8px;
+    color: rgba(255,255,255,0.85); font-size: 0.82rem;
+  }
+  .user-avatar {
+    width: 28px; height: 28px; border-radius: 50%; background: var(--copper);
+    color: #fff; display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 0.72rem;
+  }
+  .user-role {
+    background: rgba(255,255,255,0.1); color: #fff; padding: 0.15rem 0.55rem;
+    border-radius: 100px; font-size: 0.65rem; font-weight: 700;
     letter-spacing: 0.08em; text-transform: uppercase;
   }
   .logout-btn {
@@ -72,10 +90,27 @@
   }
   .logout-btn:hover { background: rgba(255,255,255,0.15); color: #fff; }
 
-  .admin-body { max-width: 1100px; margin: 0 auto; padding: 2.5rem 2rem; }
+  /* TAB BAR */
+  .tab-bar {
+    background: var(--warm-white); border-bottom: 1px solid var(--border);
+    padding: 0 2rem; display: flex; gap: 0.25rem; position: sticky; top: 60px; z-index: 90;
+  }
+  .tab-btn {
+    background: none; border: none; padding: 1rem 1.25rem;
+    font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 600;
+    color: var(--text-muted); cursor: pointer; border-bottom: 3px solid transparent;
+    transition: all 0.15s; display: flex; align-items: center; gap: 0.5rem;
+  }
+  .tab-btn:hover { color: var(--copper); }
+  .tab-btn.active { color: var(--copper); border-bottom-color: var(--copper); }
+  .tab-btn .tab-icon { font-size: 1.05rem; }
+
+  .admin-body { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+  .tab-pane { display: none; }
+  .tab-pane.active { display: block; }
 
   /* STATS ROW */
-  .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; margin-bottom: 2.5rem; }
+  .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; margin-bottom: 2rem; }
   .stat-card {
     background: #fff; border: 1px solid var(--border); border-radius: 12px;
     padding: 1.25rem 1.5rem;
@@ -83,10 +118,23 @@
   .stat-card-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.5rem; }
   .stat-card-num { font-family: 'Libre Baskerville', serif; font-size: 2rem; color: var(--copper); }
 
+  /* FILTER BAR */
+  .filter-bar {
+    background: #fff; border: 1px solid var(--border); border-radius: 12px;
+    padding: 0.75rem 1.25rem; margin-bottom: 1.5rem;
+    display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+  }
+  .filter-bar label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); }
+  .filter-bar select {
+    background: var(--warm-white); border: 1px solid var(--border);
+    border-radius: 6px; padding: 0.4rem 0.75rem; font-size: 0.85rem;
+    font-family: 'DM Sans', sans-serif; color: var(--ink);
+  }
+
   /* TWO COL LAYOUT */
   .admin-grid { display: grid; grid-template-columns: 1fr 1.6fr; gap: 2rem; align-items: start; }
 
-  /* FORM PANEL */
+  /* PANEL */
   .panel {
     background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 1.75rem;
     box-shadow: var(--shadow);
@@ -105,7 +153,9 @@
   }
   .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--copper); }
   .form-group textarea { resize: vertical; min-height: 70px; }
+  .form-group code-hint { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.15rem; }
   .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+  .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem; }
   .btn-add {
     width: 100%; background: var(--copper); color: #fff; border: none;
     padding: 0.875rem; border-radius: 8px; font-size: 0.95rem; font-weight: 600;
@@ -127,6 +177,12 @@
     margin-top: 0.5rem; display: none; transition: all 0.2s;
   }
   .btn-cancel-edit:hover { border-color: var(--copper); color: var(--copper); }
+  .btn-secondary {
+    background: var(--cream); color: var(--slate); border: 1px solid var(--border);
+    padding: 0.6rem 1.25rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600;
+    cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s;
+  }
+  .btn-secondary:hover { border-color: var(--copper); color: var(--copper); }
 
   /* RFP LIST */
   .rfp-list { display: flex; flex-direction: column; gap: 1rem; }
@@ -138,7 +194,7 @@
   }
   .rfp-list-item:hover { box-shadow: var(--shadow); }
   .rfp-list-item.editing { border-color: var(--sage); box-shadow: 0 0 0 3px rgba(74,124,111,0.15); }
-  .rfp-item-left { flex: 1; }
+  .rfp-item-left { flex: 1; min-width: 0; }
   .rfp-item-top { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.4rem; flex-wrap: wrap; }
   .rfp-item-id { font-size: 0.7rem; font-weight: 700; color: var(--text-muted); letter-spacing: 0.08em; text-transform: uppercase; }
   .rfp-cat-tag {
@@ -150,6 +206,11 @@
   .tag-hvac { background: #e8edf5; color: #3b5b9c; }
   .tag-electrical { background: #f5f0d8; color: #8a7020; }
   .tag-other { background: var(--cream); color: var(--slate); }
+  .rep-tag {
+    font-size: 0.68rem; font-weight: 700; padding: 0.15rem 0.6rem;
+    border-radius: 100px; letter-spacing: 0.06em; text-transform: uppercase;
+    background: #ede9f7; color: #594a85;
+  }
   .status-dot {
     width: 7px; height: 7px; border-radius: 50%; display: inline-block; margin-right: 3px;
   }
@@ -157,31 +218,35 @@
   .dot-closed { background: var(--text-muted); }
   .rfp-item-title { font-family: 'Libre Baskerville', serif; font-size: 0.95rem; color: var(--ink); margin-bottom: 0.2rem; }
   .rfp-item-org { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.4rem; }
-  .rfp-item-meta { display: flex; gap: 1.25rem; }
+  .rfp-item-meta { display: flex; gap: 1.25rem; flex-wrap: wrap; }
   .rfp-item-meta span { font-size: 0.75rem; color: var(--slate); }
   .rfp-item-meta span em { color: var(--text-muted); font-style: normal; font-size: 0.68rem; display: block; text-transform: uppercase; letter-spacing: 0.05em; }
+  .rfp-phase-bar {
+    margin-top: 0.7rem; display: flex; gap: 3px; align-items: center;
+  }
+  .phase-pip {
+    height: 5px; flex: 1; background: var(--cream); border-radius: 2px;
+    transition: background 0.2s;
+  }
+  .phase-pip.done { background: var(--sage); }
+  .phase-pip.current { background: var(--copper); }
+  .phase-label {
+    font-size: 0.7rem; color: var(--text-muted); margin-left: 0.5rem; white-space: nowrap;
+  }
   .rfp-item-actions { display: flex; flex-direction: column; gap: 0.5rem; flex-shrink: 0; }
-  .btn-edit {
-    background: var(--cream); color: var(--slate); border: 1px solid var(--border);
+  .btn-edit, .btn-delete, .btn-toggle-status, .btn-share {
     padding: 0.4rem 1rem; border-radius: 6px; font-size: 0.78rem; font-weight: 600;
     cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s;
-    white-space: nowrap;
+    white-space: nowrap; border: 1px solid var(--border);
   }
+  .btn-edit { background: var(--cream); color: var(--slate); }
   .btn-edit:hover { background: var(--sage-pale); border-color: var(--sage); color: var(--sage); }
-  .btn-delete {
-    background: #fff5f5; color: #c53030; border: 1px solid #feb2b2;
-    padding: 0.4rem 1rem; border-radius: 6px; font-size: 0.78rem; font-weight: 600;
-    cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s;
-    white-space: nowrap;
-  }
+  .btn-delete { background: #fff5f5; color: #c53030; border-color: #feb2b2; }
   .btn-delete:hover { background: #fed7d7; }
-  .btn-toggle-status {
-    background: var(--warm-white); color: var(--text-muted); border: 1px solid var(--border);
-    padding: 0.4rem 1rem; border-radius: 6px; font-size: 0.75rem; font-weight: 500;
-    cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s;
-    white-space: nowrap;
-  }
+  .btn-toggle-status { background: var(--warm-white); color: var(--text-muted); }
   .btn-toggle-status:hover { border-color: var(--copper); color: var(--copper); }
+  .btn-share { background: var(--sage-pale); color: var(--sage); border-color: var(--sage); }
+  .btn-share:hover { background: var(--sage); color: #fff; }
 
   .empty-state {
     text-align: center; padding: 3rem; color: var(--text-muted);
@@ -212,26 +277,86 @@
     position: fixed; bottom: 2rem; right: 2rem;
     background: var(--ink); color: #fff; padding: 1rem 1.5rem;
     border-radius: 10px; font-size: 0.875rem; font-weight: 500;
-    box-shadow: var(--shadow-lg); display: none; z-index: 300;
+    box-shadow: var(--shadow-lg); display: none; z-index: 300; max-width: 360px;
   }
   .toast.show { display: block; animation: fadeUp 0.3s; }
   .toast .t-green { color: #68d391; }
   .toast .t-red { color: #fc8181; }
-
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
   }
 
   /* SECTION HEADER */
-  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; }
+  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.5rem; }
   .section-header h3 { font-family: 'Libre Baskerville', serif; font-size: 1.1rem; }
   .section-header span { font-size: 0.8rem; color: var(--text-muted); }
+
+  /* HAIL MAP / IFRAME */
+  .map-frame-wrap {
+    background: #fff; border: 1px solid var(--border); border-radius: 16px;
+    overflow: hidden; box-shadow: var(--shadow);
+  }
+  .map-frame-wrap iframe {
+    display: block; width: 100%; height: calc(100vh - 220px); min-height: 600px; border: 0;
+  }
+  .map-fallback {
+    padding: 3rem; text-align: center; color: var(--text-muted);
+  }
+  .map-fallback a { color: var(--copper); font-weight: 600; }
+
+  /* INTAKE PREVIEW */
+  .intake-preview {
+    background: var(--warm-white); border: 1px solid var(--border); border-radius: 12px;
+    padding: 2rem; max-width: 600px;
+  }
+  .intake-preview h4 { font-family: 'Libre Baskerville', serif; font-size: 1.25rem; margin-bottom: 0.5rem; }
+  .intake-preview .sub { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.5rem; }
+  .code-block {
+    background: var(--ink); color: #d8dde6; padding: 1rem 1.25rem; border-radius: 8px;
+    font-family: 'Courier New', monospace; font-size: 0.78rem; line-height: 1.55;
+    overflow-x: auto; white-space: pre; margin-top: 0.5rem;
+  }
+  .code-block.light {
+    background: var(--cream); color: var(--ink); border: 1px solid var(--border);
+  }
+  .copy-row { display: flex; align-items: center; gap: 0.75rem; margin-top: 1rem; }
+  .copy-btn {
+    background: var(--ink); color: #fff; border: none;
+    padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.78rem; font-weight: 600;
+    cursor: pointer; font-family: 'DM Sans', sans-serif;
+  }
+  .copy-btn:hover { background: var(--slate); }
+
+  /* SETTINGS CARDS */
+  .settings-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+  .settings-card {
+    background: #fff; border: 1px solid var(--border); border-radius: 16px;
+    padding: 1.75rem; box-shadow: var(--shadow);
+  }
+  .settings-card h4 {
+    font-family: 'Libre Baskerville', serif; font-size: 1.05rem;
+    margin-bottom: 0.35rem;
+  }
+  .settings-card .sub { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.25rem; }
+  .settings-card .field-row { display: flex; gap: 0.75rem; align-items: flex-end; }
+  .settings-card .field-row .form-group { flex: 1; margin-bottom: 0; }
+  .badge-ok { background: var(--sage-pale); color: var(--sage); padding: 0.2rem 0.6rem; border-radius: 100px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; }
+  .badge-warn { background: #fff3d4; color: #8a6020; padding: 0.2rem 0.6rem; border-radius: 100px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; }
+
+  .users-table { width: 100%; border-collapse: collapse; margin-top: 0.5rem; }
+  .users-table th, .users-table td {
+    text-align: left; padding: 0.6rem 0.75rem; font-size: 0.85rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .users-table th { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); font-weight: 700; }
+  .users-table td code { background: var(--cream); padding: 0.15rem 0.45rem; border-radius: 4px; font-size: 0.78rem; }
 
   @media (max-width: 800px) {
     .admin-grid { grid-template-columns: 1fr; }
     .stats-row { grid-template-columns: 1fr 1fr; }
-    .form-row-2 { grid-template-columns: 1fr; }
+    .form-row-2, .form-row-3 { grid-template-columns: 1fr; }
+    .tab-bar { overflow-x: auto; }
   }
 </style>
 </head>
@@ -252,9 +377,11 @@
     </div>
     <h2>Inductra Admin</h2>
     <p>RFP Management Portal</p>
-    <input type="password" id="pw-input" placeholder="Enter admin password" onkeydown="if(event.key==='Enter') checkLogin()">
+    <input type="text" id="user-input" placeholder="Username" autocomplete="username">
+    <input type="password" id="pw-input" placeholder="Password" autocomplete="current-password" onkeydown="if(event.key==='Enter') checkLogin()">
     <button class="login-btn" onclick="checkLogin()">Sign In →</button>
-    <div class="login-error" id="login-error">Incorrect password. Try again.</div>
+    <div class="login-error" id="login-error">Invalid username or password.</div>
+    <div class="login-hint">Admin sees all projects · Reps see their assigned RFPs only.<br>Manage users in the Settings tab after sign-in.</div>
   </div>
 </div>
 
@@ -262,7 +389,7 @@
 <div id="admin-screen">
   <nav class="admin-nav">
     <div class="admin-nav-logo">
-      <svg viewBox="0 0 420 90" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Inductra Building Systems logo">
+      <svg viewBox="0 0 420 90" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Inductra Building Systems logo" style="height:42px;width:auto;">
         <polygon points="10,72 52,32 62,42 20,82" fill="#3a4a5c" opacity="0.7"/>
         <polygon points="28,72 70,32 80,42 38,82" fill="#2d3a4a" opacity="0.85"/>
         <polygon points="58,18 90,52 58,52" fill="#3a6fa8"/>
@@ -273,121 +400,364 @@
         <line x1="105" y1="60" x2="415" y2="60" stroke="#b5651d" stroke-width="1.5"/>
         <text x="107" y="78" font-family="Arial, sans-serif" font-weight="700" font-size="15" letter-spacing="4" fill="#b5651d">BUILDING SYSTEMS LLC</text>
       </svg>
-      <span class="admin-badge">Admin</span>
+      <span class="admin-badge" id="role-badge">Admin</span>
     </div>
-    <button class="logout-btn" onclick="logout()">Sign Out</button>
+    <div class="nav-right">
+      <div class="user-chip">
+        <div class="user-avatar" id="user-avatar">ST</div>
+        <div>
+          <div id="user-name" style="font-weight:600;">Stephanie</div>
+        </div>
+      </div>
+      <button class="logout-btn" onclick="logout()">Sign Out</button>
+    </div>
   </nav>
+
+  <!-- TABS -->
+  <div class="tab-bar">
+    <button class="tab-btn active" data-tab="projects" onclick="switchTab('projects')"><span class="tab-icon">▤</span> Projects</button>
+    <button class="tab-btn" data-tab="storm" onclick="switchTab('storm')"><span class="tab-icon">⛈</span> Storm Leads</button>
+    <button class="tab-btn admin-only" data-tab="intake" onclick="switchTab('intake')"><span class="tab-icon">✉</span> Intake Form</button>
+    <button class="tab-btn admin-only" data-tab="settings" onclick="switchTab('settings')"><span class="tab-icon">⚙</span> Settings</button>
+  </div>
 
   <div class="admin-body">
 
-    <!-- STATS -->
-    <div class="stats-row">
-      <div class="stat-card">
-        <div class="stat-card-label">Total RFPs</div>
-        <div class="stat-card-num" id="stat-total">0</div>
+    <!-- ─── TAB: PROJECTS ─── -->
+    <div class="tab-pane active" id="tab-projects">
+
+      <!-- STATS -->
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-card-label">Total RFPs</div><div class="stat-card-num" id="stat-total">0</div></div>
+        <div class="stat-card"><div class="stat-card-label">Open</div><div class="stat-card-num" id="stat-open" style="color:var(--sage)">0</div></div>
+        <div class="stat-card"><div class="stat-card-label">Closed</div><div class="stat-card-num" id="stat-closed" style="color:var(--text-muted)">0</div></div>
+        <div class="stat-card"><div class="stat-card-label">Est. Total Value</div><div class="stat-card-num" id="stat-value" style="font-size:1.3rem">$0</div></div>
       </div>
-      <div class="stat-card">
-        <div class="stat-card-label">Open</div>
-        <div class="stat-card-num" id="stat-open" style="color:var(--sage)">0</div>
+
+      <!-- FILTER BAR -->
+      <div class="filter-bar" id="filter-bar">
+        <label>Filter:</label>
+        <select id="filter-rep" onchange="applyFilters()">
+          <option value="all">All Reps</option>
+        </select>
+        <select id="filter-status" onchange="applyFilters()">
+          <option value="all">All Statuses</option>
+          <option value="open">Open Only</option>
+          <option value="closed">Closed Only</option>
+        </select>
+        <select id="filter-category" onchange="applyFilters()">
+          <option value="all">All Categories</option>
+          <option value="roofing">Roofing</option>
+          <option value="paving">Paving</option>
+          <option value="hvac">HVAC</option>
+          <option value="electrical">Electrical</option>
+          <option value="other">Other</option>
+        </select>
       </div>
-      <div class="stat-card">
-        <div class="stat-card-label">Closed</div>
-        <div class="stat-card-num" id="stat-closed" style="color:var(--text-muted)">0</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-card-label">Est. Total Value</div>
-        <div class="stat-card-num" id="stat-value" style="font-size:1.3rem">$0</div>
+
+      <div class="admin-grid">
+
+        <!-- ADD/EDIT FORM -->
+        <div class="panel">
+          <div class="panel-title" id="form-title">Add New RFP</div>
+          <div class="panel-sub" id="form-sub">Fill in the project details below.</div>
+
+          <input type="hidden" id="edit-id">
+
+          <div class="form-group">
+            <label>Project Title *</label>
+            <input type="text" id="f-title" placeholder="e.g. Main Sanctuary Roof Replacement">
+          </div>
+          <div class="form-group">
+            <label>Organization Name *</label>
+            <input type="text" id="f-org" placeholder="e.g. St. Catherine Parish">
+          </div>
+          <div class="form-row-2">
+            <div class="form-group">
+              <label>Location</label>
+              <input type="text" id="f-location" placeholder="Wichita, KS">
+            </div>
+            <div class="form-group">
+              <label>Category *</label>
+              <select id="f-category">
+                <option value="">Select...</option>
+                <option value="roofing">Roofing</option>
+                <option value="paving">Paving</option>
+                <option value="hvac">HVAC</option>
+                <option value="electrical">Electrical</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row-2">
+            <div class="form-group">
+              <label>Est. Value Low ($)</label>
+              <input type="number" id="f-val-low" placeholder="50000">
+            </div>
+            <div class="form-group">
+              <label>Est. Value High ($)</label>
+              <input type="number" id="f-val-high" placeholder="80000">
+            </div>
+          </div>
+          <div class="form-row-2">
+            <div class="form-group">
+              <label>Bid Deadline</label>
+              <input type="date" id="f-deadline">
+            </div>
+            <div class="form-group">
+              <label>Status</label>
+              <select id="f-status">
+                <option value="open">Open</option>
+                <option value="closed">Closed</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row-2">
+            <div class="form-group">
+              <label>Assigned Rep *</label>
+              <select id="f-rep"></select>
+            </div>
+            <div class="form-group">
+              <label>Current Phase</label>
+              <select id="f-phase">
+                <option value="1">1 — Site Walk &amp; Specs</option>
+                <option value="2">2 — Bid Package Issued</option>
+                <option value="3">3 — Bids Received</option>
+                <option value="4">4 — Award</option>
+                <option value="5">5 — Mobilization</option>
+                <option value="6">6 — Construction</option>
+                <option value="7">7 — Punch List</option>
+                <option value="8">8 — Closeout</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Scope Summary</label>
+            <input type="text" id="f-scope" placeholder="e.g. FiberTite membrane · 22,000 SF">
+          </div>
+          <div class="form-group">
+            <label>Client Access Code (for Client Portal)</label>
+            <input type="text" id="f-clientcode" placeholder="e.g. catherine-roof-2026">
+          </div>
+          <div class="form-group">
+            <label>Notes (internal only)</label>
+            <textarea id="f-notes" placeholder="Any internal notes about this project..."></textarea>
+          </div>
+
+          <button class="btn-add" id="btn-add-rfp" onclick="addRFP()">Add RFP →</button>
+          <button class="btn-update" id="btn-update-rfp" onclick="updateRFP()">Save Changes →</button>
+          <button class="btn-cancel-edit" id="btn-cancel-edit" onclick="cancelEdit()">Cancel Edit</button>
+        </div>
+
+        <!-- RFP LIST -->
+        <div>
+          <div class="section-header">
+            <h3>Active Project Board</h3>
+            <span id="rfp-count">0 projects</span>
+          </div>
+          <div class="rfp-list" id="rfp-list">
+            <div class="empty-state"><p>No RFPs yet. Add your first project using the form.</p></div>
+          </div>
+
+          <div class="export-row">
+            <button class="btn-export" onclick="exportJSON()">⬇ Export JSON</button>
+            <button class="btn-export-csv" onclick="exportCSV()">⬇ Export CSV</button>
+          </div>
+        </div>
+
       </div>
     </div>
 
-    <div class="admin-grid">
-
-      <!-- ADD/EDIT FORM -->
-      <div class="panel">
-        <div class="panel-title" id="form-title">Add New RFP</div>
-        <div class="panel-sub" id="form-sub">Fill in the project details below.</div>
-
-        <input type="hidden" id="edit-id">
-
-        <div class="form-group">
-          <label>Project Title *</label>
-          <input type="text" id="f-title" placeholder="e.g. Main Sanctuary Roof Replacement">
-        </div>
-        <div class="form-group">
-          <label>Organization Name *</label>
-          <input type="text" id="f-org" placeholder="e.g. St. Catherine Parish">
-        </div>
-        <div class="form-row-2">
-          <div class="form-group">
-            <label>Location</label>
-            <input type="text" id="f-location" placeholder="Wichita, KS">
-          </div>
-          <div class="form-group">
-            <label>Category *</label>
-            <select id="f-category">
-              <option value="">Select...</option>
-              <option value="roofing">Roofing</option>
-              <option value="paving">Paving</option>
-              <option value="hvac">HVAC</option>
-              <option value="electrical">Electrical</option>
-              <option value="other">Other</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-row-2">
-          <div class="form-group">
-            <label>Est. Value Low ($)</label>
-            <input type="number" id="f-val-low" placeholder="50000">
-          </div>
-          <div class="form-group">
-            <label>Est. Value High ($)</label>
-            <input type="number" id="f-val-high" placeholder="80000">
-          </div>
-        </div>
-        <div class="form-row-2">
-          <div class="form-group">
-            <label>Bid Deadline</label>
-            <input type="date" id="f-deadline">
-          </div>
-          <div class="form-group">
-            <label>Status</label>
-            <select id="f-status">
-              <option value="open">Open</option>
-              <option value="closed">Closed</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Scope Summary</label>
-          <input type="text" id="f-scope" placeholder="e.g. FiberTite membrane · 22,000 SF">
-        </div>
-        <div class="form-group">
-          <label>Notes (internal only)</label>
-          <textarea id="f-notes" placeholder="Any internal notes about this project..."></textarea>
-        </div>
-
-        <button class="btn-add" id="btn-add-rfp" onclick="addRFP()">Add RFP →</button>
-        <button class="btn-update" id="btn-update-rfp" onclick="updateRFP()">Save Changes →</button>
-        <button class="btn-cancel-edit" id="btn-cancel-edit" onclick="cancelEdit()">Cancel Edit</button>
+    <!-- ─── TAB: STORM LEADS ─── -->
+    <div class="tab-pane" id="tab-storm">
+      <div class="section-header">
+        <h3>Storm Leads — Hail Intelligence Map</h3>
+        <span>Live hail reports + roof portfolio triage · Source: Iowa State IEM (NWS LSR)</span>
       </div>
-
-      <!-- RFP LIST -->
-      <div>
-        <div class="section-header">
-          <h3>Active Project Board</h3>
-          <span id="rfp-count">0 projects</span>
-        </div>
-        <div class="rfp-list" id="rfp-list">
-          <div class="empty-state"><p>No RFPs yet. Add your first project using the form.</p></div>
-        </div>
-
-        <div class="export-row">
-          <button class="btn-export" onclick="exportJSON()">⬇ Export JSON</button>
-          <button class="btn-export-csv" onclick="exportCSV()">⬇ Export CSV</button>
+      <div class="map-frame-wrap">
+        <iframe id="hailmap-iframe" src="roofing_hail_map_mvp/index.html" title="Roofing Hail Intelligence Map" loading="lazy"></iframe>
+        <div class="map-fallback" id="hailmap-fallback" style="display:none;">
+          <p>Hail map could not load in iframe.</p>
+          <p style="margin-top:0.5rem;"><a href="roofing_hail_map_mvp/index.html" target="_blank" rel="noopener">Open the hail map in a new tab →</a></p>
         </div>
       </div>
-
     </div>
+
+    <!-- ─── TAB: INTAKE FORM ─── -->
+    <div class="tab-pane" id="tab-intake">
+      <div class="section-header">
+        <h3>Public RFP Intake Form</h3>
+        <span id="formspree-status" class="badge-warn">Formspree not configured</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1.1fr 1fr;gap:2rem;align-items:start;">
+        <div class="panel">
+          <div class="panel-title">Live Preview</div>
+          <div class="panel-sub">This is what prospects see. Submissions email you via Formspree and (optionally) post into your RFP board.</div>
+
+          <div class="intake-preview">
+            <h4>Tell us about your project</h4>
+            <div class="sub">We respond within one business day. No obligation.</div>
+            <form id="public-intake-form" onsubmit="return submitIntake(event)">
+              <div class="form-group">
+                <label>Your name *</label>
+                <input type="text" name="name" required>
+              </div>
+              <div class="form-group">
+                <label>Organization *</label>
+                <input type="text" name="organization" required>
+              </div>
+              <div class="form-row-2">
+                <div class="form-group">
+                  <label>Email *</label>
+                  <input type="email" name="email" required>
+                </div>
+                <div class="form-group">
+                  <label>Phone</label>
+                  <input type="tel" name="phone">
+                </div>
+              </div>
+              <div class="form-row-2">
+                <div class="form-group">
+                  <label>Project type</label>
+                  <select name="project_type">
+                    <option value="roofing">Roofing</option>
+                    <option value="paving">Paving</option>
+                    <option value="hvac">HVAC</option>
+                    <option value="electrical">Electrical</option>
+                    <option value="other">Other / Unsure</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Location</label>
+                  <input type="text" name="location" placeholder="City, State">
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Tell us about the project</label>
+                <textarea name="message" rows="4" placeholder="Square footage, age, urgency, hail damage, etc."></textarea>
+              </div>
+              <input type="hidden" name="_subject" value="New RFP Intake — Inductra Building Systems">
+              <input type="hidden" name="source" value="admin-intake-preview">
+              <button type="submit" class="btn-add" style="margin-top:0.25rem;">Send →</button>
+            </form>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">Embed on your public site</div>
+          <div class="panel-sub">Copy this snippet into <code>index.html</code> wherever you want the intake form to appear. Replace <code>FORM_ID</code> with your Formspree form ID (set in Settings).</div>
+
+          <div class="code-block" id="embed-code-block"></div>
+          <div class="copy-row">
+            <button class="copy-btn" onclick="copyEmbed()">Copy snippet</button>
+            <span style="font-size:0.78rem;color:var(--text-muted);">Pastes a styled form that POSTs to your Formspree endpoint.</span>
+          </div>
+
+          <div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border);">
+            <h4 style="font-family:'Libre Baskerville',serif;font-size:0.95rem;margin-bottom:0.4rem;">How submissions flow</h4>
+            <ol style="margin-left:1.25rem;font-size:0.85rem;color:var(--slate);line-height:1.7;">
+              <li>Prospect submits form on <code>index.html</code></li>
+              <li>Formspree emails you (and your team) at the address tied to your account</li>
+              <li>You manually create the RFP in the Projects tab — or auto-create from email</li>
+              <li>When admin adds an RFP, a notification fires to the same Formspree endpoint so the team knows</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── TAB: SETTINGS ─── -->
+    <div class="tab-pane" id="tab-settings">
+      <div class="section-header">
+        <h3>Settings</h3>
+        <span>Stored locally in this browser. Configure each environment separately.</span>
+      </div>
+
+      <div class="settings-grid">
+
+        <!-- FORMSPREE -->
+        <div class="settings-card">
+          <h4>Formspree integration <span id="fs-badge" class="badge-warn" style="margin-left:0.5rem;">Not configured</span></h4>
+          <div class="sub">Paste your Formspree form ID. Used by the public intake form and admin notifications when RFPs are added.</div>
+          <div class="field-row">
+            <div class="form-group">
+              <label>Formspree Form ID</label>
+              <input type="text" id="setting-formspree" placeholder="e.g. xyzpwlkj">
+            </div>
+            <button class="btn-secondary" onclick="saveFormspree()">Save</button>
+            <button class="btn-secondary" onclick="testFormspree()">Send test</button>
+          </div>
+          <div style="font-size:0.78rem;color:var(--text-muted);margin-top:0.5rem;">
+            Get your form ID from <a href="https://formspree.io" target="_blank" rel="noopener" style="color:var(--copper);">formspree.io</a> → Forms → click your form → copy the ID after <code>/f/</code> in the endpoint URL.
+          </div>
+        </div>
+
+        <!-- USERS -->
+        <div class="settings-card">
+          <h4>Users &amp; access</h4>
+          <div class="sub">Hardcoded user list. To add or change users, edit the <code>USERS</code> object near the top of the script in <code>admin.html</code>.</div>
+          <table class="users-table">
+            <thead><tr><th>Username</th><th>Name</th><th>Role</th><th>Sees</th></tr></thead>
+            <tbody id="users-tbody"></tbody>
+          </table>
+          <div style="font-size:0.78rem;color:var(--text-muted);margin-top:0.75rem;">
+            Roles: <strong>admin</strong> sees and edits every RFP plus the Intake/Settings tabs. <strong>rep</strong> sees only the RFPs assigned to their username.
+          </div>
+        </div>
+
+        <!-- GOOGLE SEARCH CONSOLE -->
+        <div class="settings-card">
+          <h4>Google Search Console <span id="gsc-badge" class="badge-warn" style="margin-left:0.5rem;">Not verified</span></h4>
+          <div class="sub">Verify ownership of <code>inductrabuildingsystems.com</code> with Google Search Console so you can submit a sitemap and monitor indexing.</div>
+
+          <div class="form-group">
+            <label>Verification token (from GSC HTML tag method)</label>
+            <input type="text" id="setting-gsc" placeholder='paste only the content="..." value'>
+          </div>
+          <button class="btn-secondary" onclick="saveGSC()">Save token</button>
+
+          <div style="margin-top:1.5rem;">
+            <strong style="font-size:0.85rem;">Step 1 · Add this meta tag to <code>&lt;head&gt;</code> of <code>index.html</code>:</strong>
+            <div class="code-block light" id="gsc-tag-block">&lt;!-- save a verification token first --&gt;</div>
+            <button class="copy-btn" style="margin-top:0.5rem;" onclick="copyGSCTag()">Copy meta tag</button>
+          </div>
+
+          <div style="margin-top:1.5rem;">
+            <strong style="font-size:0.85rem;">Step 2 · Create <code>sitemap.xml</code> at site root:</strong>
+            <div class="code-block light" id="sitemap-block"></div>
+            <button class="copy-btn" style="margin-top:0.5rem;" onclick="copySitemap()">Copy sitemap.xml</button>
+            <button class="copy-btn" style="margin-top:0.5rem;background:var(--sage);" onclick="downloadSitemap()">Download sitemap.xml</button>
+          </div>
+
+          <div style="margin-top:1.5rem;">
+            <strong style="font-size:0.85rem;">Step 3 · Create <code>robots.txt</code> at site root:</strong>
+            <div class="code-block light" id="robots-block"></div>
+            <button class="copy-btn" style="margin-top:0.5rem;" onclick="copyRobots()">Copy robots.txt</button>
+          </div>
+
+          <div style="margin-top:1.5rem;font-size:0.85rem;color:var(--slate);line-height:1.7;">
+            <strong>Step 4</strong> · In Search Console, choose URL-prefix verification, paste your domain, select HTML tag method, then click Verify.<br>
+            <strong>Step 5</strong> · Go to Sitemaps in GSC and submit <code>https://yourdomain.com/sitemap.xml</code>.<br>
+            <strong>Step 6</strong> · Use URL Inspection → Request Indexing for each new page.
+          </div>
+        </div>
+
+        <!-- DATA -->
+        <div class="settings-card">
+          <h4>Data &amp; backup</h4>
+          <div class="sub">All RFP data lives in this browser's localStorage. Export regularly so you don't lose work if the browser is cleared.</div>
+          <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+            <button class="btn-secondary" onclick="exportJSON()">⬇ Export JSON backup</button>
+            <button class="btn-secondary" onclick="exportCSV()">⬇ Export CSV</button>
+            <button class="btn-secondary" onclick="importJSON()">⬆ Import JSON</button>
+            <button class="btn-secondary" style="color:#c53030;border-color:#feb2b2;" onclick="resetData()">Reset to sample data</button>
+          </div>
+          <input type="file" id="import-file" accept=".json" style="display:none;" onchange="handleImport(event)">
+        </div>
+
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -395,55 +765,183 @@
 <div class="toast" id="toast"><span id="toast-msg"></span></div>
 
 <script>
-  const ADMIN_PASSWORD = 'inductra2026';
-  const STORAGE_KEY = 'inductra_rfps';
+  // ═══════════════════════════════════════════════════
+  //   USERS — edit this list to add/remove team members
+  // ═══════════════════════════════════════════════════
+  const USERS = {
+    'stephanie': { password: 'inductra2026', role: 'admin', name: 'Stephanie',  initials: 'ST' },
+    'admin':     { password: 'inductra2026', role: 'admin', name: 'Admin',      initials: 'AD' },
+    'rep1':      { password: 'changeMe1!',   role: 'rep',   name: 'Sales Rep 1', initials: 'R1' },
+    'rep2':      { password: 'changeMe2!',   role: 'rep',   name: 'Sales Rep 2', initials: 'R2' },
+  };
 
-  // ── AUTH ──
+  const STORAGE_KEY      = 'inductra_rfps';
+  const SESSION_KEY      = 'inductra_session';
+  const FORMSPREE_KEY    = 'inductra_formspree_id';
+  const FORMSPREE_DEFAULT= 'xkoywped'; // pre-wired Formspree form ID
+  const GSC_KEY          = 'inductra_gsc_token';
+  const SITE_URL         = 'https://inductrabuildingsystems.com'; // edit if domain differs
+
+  let currentUser = null;
+  let currentTab  = 'projects';
+
+  // ── PHASES ──
+  const PHASES = [
+    'Site Walk & Specs','Bid Package Issued','Bids Received','Award',
+    'Mobilization','Construction','Punch List','Closeout'
+  ];
+
+  // ─────────────────────────────────────────────
+  //                    AUTH
+  // ─────────────────────────────────────────────
   function checkLogin() {
-    const pw = document.getElementById('pw-input').value;
-    if (pw === ADMIN_PASSWORD) {
-      document.getElementById('login-screen').style.display = 'none';
-      document.getElementById('admin-screen').style.display = 'block';
-      loadRFPs();
+    const u = document.getElementById('user-input').value.trim().toLowerCase();
+    const p = document.getElementById('pw-input').value;
+    const user = USERS[u];
+    if (user && user.password === p) {
+      currentUser = { username: u, ...user };
+      sessionStorage.setItem(SESSION_KEY, JSON.stringify(currentUser));
+      enterAdmin();
     } else {
       document.getElementById('login-error').style.display = 'block';
       document.getElementById('pw-input').value = '';
     }
   }
   function logout() {
+    sessionStorage.removeItem(SESSION_KEY);
+    currentUser = null;
     document.getElementById('login-screen').style.display = 'flex';
     document.getElementById('admin-screen').style.display = 'none';
+    document.getElementById('user-input').value = '';
     document.getElementById('pw-input').value = '';
   }
+  function enterAdmin() {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('admin-screen').style.display = 'block';
+    document.getElementById('user-name').textContent = currentUser.name;
+    document.getElementById('user-avatar').textContent = currentUser.initials;
+    document.getElementById('role-badge').textContent = currentUser.role === 'admin' ? 'Admin' : 'Rep';
 
-  // ── STORAGE ──
+    // Hide admin-only tabs from reps
+    document.querySelectorAll('.tab-btn.admin-only').forEach(b => {
+      b.style.display = currentUser.role === 'admin' ? 'flex' : 'none';
+    });
+
+    populateRepDropdowns();
+    populateUserTable();
+    loadSettings();
+    loadRFPs();
+    switchTab('projects');
+  }
+
+  // Restore session on reload
+  (function tryRestore() {
+    const s = sessionStorage.getItem(SESSION_KEY);
+    if (s) {
+      try { currentUser = JSON.parse(s); enterAdmin(); } catch(e) { /* ignore */ }
+    }
+  })();
+
+  // ─────────────────────────────────────────────
+  //                    TABS
+  // ─────────────────────────────────────────────
+  function switchTab(tab) {
+    currentTab = tab;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.toggle('active', p.id === 'tab-' + tab));
+    if (tab === 'intake') buildEmbedCode();
+    if (tab === 'settings') {
+      loadSettings();
+      buildGSCTag();
+      buildSitemap();
+      buildRobots();
+    }
+  }
+
+  // ─────────────────────────────────────────────
+  //                    USERS
+  // ─────────────────────────────────────────────
+  function populateRepDropdowns() {
+    const repOptions = Object.entries(USERS)
+      .filter(([_, u]) => u.role === 'rep' || u.role === 'admin')
+      .map(([k, u]) => `<option value="${k}">${u.name}${u.role === 'admin' ? ' (admin)' : ''}</option>`)
+      .join('');
+    const fRep = document.getElementById('f-rep');
+    fRep.innerHTML = '<option value="">Select rep...</option>' + repOptions;
+
+    const filterRep = document.getElementById('filter-rep');
+    filterRep.innerHTML = '<option value="all">All Reps</option>' + repOptions;
+
+    // Reps can only see/select themselves
+    if (currentUser.role === 'rep') {
+      fRep.value = currentUser.username;
+      fRep.disabled = true;
+      filterRep.value = currentUser.username;
+      filterRep.disabled = true;
+    } else {
+      fRep.disabled = false;
+      filterRep.disabled = false;
+    }
+  }
+  function populateUserTable() {
+    const tbody = document.getElementById('users-tbody');
+    tbody.innerHTML = Object.entries(USERS).map(([k, u]) => `
+      <tr>
+        <td><code>${k}</code></td>
+        <td>${u.name}</td>
+        <td>${u.role}</td>
+        <td>${u.role === 'admin' ? 'All RFPs + Settings' : 'Only RFPs assigned to ' + k}</td>
+      </tr>
+    `).join('');
+  }
+
+  // ─────────────────────────────────────────────
+  //                    DATA
+  // ─────────────────────────────────────────────
   function getRFPs() {
     try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || getDefaultRFPs(); }
     catch { return getDefaultRFPs(); }
   }
-  function saveRFPs(rfps) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(rfps));
-  }
+  function saveRFPs(rfps) { localStorage.setItem(STORAGE_KEY, JSON.stringify(rfps)); }
   function getDefaultRFPs() {
     return [
-      { id: 'PRJ-001', title: 'Main Sanctuary Roof Replacement', org: 'St. Catherine Parish', location: 'Wichita, KS', category: 'roofing', valLow: 180000, valHigh: 240000, deadline: '2026-05-15', status: 'open', scope: 'FiberTite membrane · 22,000 SF', notes: '', created: Date.now() },
-      { id: 'PRJ-002', title: 'Parking Lot Reconstruction', org: 'Church of the Magdalene', location: 'Wichita, KS', category: 'paving', valLow: 95000, valHigh: 130000, deadline: '2026-05-22', status: 'open', scope: 'Full-depth reclaim · 85 spaces', notes: '', created: Date.now() },
-      { id: 'PRJ-003', title: 'Gymnasium HVAC Replacement', org: 'Holy Cross Catholic School', location: 'Derby, KS', category: 'hvac', valLow: 75000, valHigh: 110000, deadline: '2026-06-03', status: 'open', scope: 'Rooftop units · 3 zones', notes: '', created: Date.now() },
+      { id: 'PRJ-001', title: 'Main Sanctuary Roof Replacement', org: 'St. Catherine Parish', location: 'Wichita, KS', category: 'roofing', valLow: 180000, valHigh: 240000, deadline: '2026-05-15', status: 'open', scope: 'FiberTite membrane · 22,000 SF', notes: '', rep: 'stephanie', phase: 2, clientCode: 'catherine-roof-2026', created: Date.now() },
+      { id: 'PRJ-002', title: 'Parking Lot Reconstruction',     org: 'Church of the Magdalene',  location: 'Wichita, KS', category: 'paving',  valLow: 95000,  valHigh: 130000, deadline: '2026-05-22', status: 'open', scope: 'Full-depth reclaim · 85 spaces', notes: '', rep: 'rep1',     phase: 1, clientCode: 'magdalene-paving-2026', created: Date.now() },
+      { id: 'PRJ-003', title: 'Gymnasium HVAC Replacement',     org: 'Holy Cross Catholic School', location: 'Derby, KS',  category: 'hvac',    valLow: 75000,  valHigh: 110000, deadline: '2026-06-03', status: 'open', scope: 'Rooftop units · 3 zones',        notes: '', rep: 'rep2',     phase: 3, clientCode: 'holycross-hvac-2026', created: Date.now() },
     ];
   }
-
-  // ── NEXT ID ──
   function nextID(rfps) {
-    const nums = rfps.map(r => parseInt(r.id.replace('PRJ-', ''))).filter(n => !isNaN(n));
+    const nums = rfps.map(r => parseInt((r.id || '').replace('PRJ-', ''))).filter(n => !isNaN(n));
     const max = nums.length ? Math.max(...nums) : 0;
     return 'PRJ-' + String(max + 1).padStart(3, '0');
   }
 
-  // ── FORMAT ──
-  function fmtMoney(n) {
-    if (!n) return '—';
-    return '$' + Number(n).toLocaleString();
+  // ─────────────────────────────────────────────
+  //                  RENDERING
+  // ─────────────────────────────────────────────
+  function visibleRFPs() {
+    let rfps = getRFPs();
+    if (currentUser.role === 'rep') rfps = rfps.filter(r => r.rep === currentUser.username);
+    return rfps;
   }
+  function applyFilters() {
+    let rfps = visibleRFPs();
+    const repF = document.getElementById('filter-rep').value;
+    const stF  = document.getElementById('filter-status').value;
+    const ctF  = document.getElementById('filter-category').value;
+    if (repF !== 'all') rfps = rfps.filter(r => r.rep === repF);
+    if (stF !== 'all')  rfps = rfps.filter(r => r.status === stF);
+    if (ctF !== 'all')  rfps = rfps.filter(r => r.category === ctF);
+    renderList(rfps);
+    updateStats(rfps);
+  }
+  function loadRFPs() {
+    const rfps = getRFPs();
+    if (!localStorage.getItem(STORAGE_KEY)) saveRFPs(rfps);
+    applyFilters();
+  }
+
+  function fmtMoney(n) { return !n ? '—' : '$' + Number(n).toLocaleString(); }
   function fmtDate(d) {
     if (!d) return '—';
     const [y, m, day] = d.split('-');
@@ -451,26 +949,26 @@
     return `${months[parseInt(m)-1]} ${parseInt(day)}, ${y}`;
   }
   function catClass(c) {
-    const map = { roofing: 'tag-roofing', paving: 'tag-paving', hvac: 'tag-hvac', electrical: 'tag-electrical', other: 'tag-other' };
-    return map[c] || 'tag-other';
+    return ({roofing:'tag-roofing',paving:'tag-paving',hvac:'tag-hvac',electrical:'tag-electrical',other:'tag-other'})[c] || 'tag-other';
   }
-  function catLabel(c) {
-    return c ? c.charAt(0).toUpperCase() + c.slice(1) : 'Other';
-  }
+  function catLabel(c) { return c ? c.charAt(0).toUpperCase() + c.slice(1) : 'Other'; }
+  function repName(rk) { return USERS[rk]?.name || (rk || 'Unassigned'); }
 
-  // ── RENDER ──
-  function loadRFPs() {
-    const rfps = getRFPs();
-    if (!localStorage.getItem(STORAGE_KEY)) saveRFPs(rfps);
-    renderList(rfps);
-    updateStats(rfps);
+  function phaseBar(currentPhase) {
+    const cur = parseInt(currentPhase) || 1;
+    const pips = PHASES.map((_, i) => {
+      const n = i + 1;
+      const cls = n < cur ? 'done' : n === cur ? 'current' : '';
+      return `<div class="phase-pip ${cls}" title="Phase ${n}: ${PHASES[i]}"></div>`;
+    }).join('');
+    return `<div class="rfp-phase-bar">${pips}<span class="phase-label">Phase ${cur}/8 · ${PHASES[cur-1]}</span></div>`;
   }
 
   function renderList(rfps) {
     const list = document.getElementById('rfp-list');
     document.getElementById('rfp-count').textContent = rfps.length + ' project' + (rfps.length !== 1 ? 's' : '');
     if (!rfps.length) {
-      list.innerHTML = '<div class="empty-state"><p>No RFPs yet. Add your first project using the form.</p></div>';
+      list.innerHTML = '<div class="empty-state"><p>No RFPs match the current filters.</p></div>';
       return;
     }
     list.innerHTML = rfps.map(r => `
@@ -479,27 +977,35 @@
           <div class="rfp-item-top">
             <span class="rfp-item-id">${r.id}</span>
             <span class="rfp-cat-tag ${catClass(r.category)}">${catLabel(r.category)}</span>
+            <span class="rep-tag">${repName(r.rep)}</span>
             <span style="font-size:0.75rem;color:${r.status==='open'?'var(--sage)':'var(--text-muted)'}">
               <span class="status-dot ${r.status==='open'?'dot-open':'dot-closed'}"></span>
               ${r.status === 'open' ? 'Open' : 'Closed'}
             </span>
           </div>
-          <div class="rfp-item-title">${r.title}</div>
-          <div class="rfp-item-org">${r.org}${r.location ? ' — ' + r.location : ''}</div>
+          <div class="rfp-item-title">${escapeHTML(r.title)}</div>
+          <div class="rfp-item-org">${escapeHTML(r.org)}${r.location ? ' — ' + escapeHTML(r.location) : ''}</div>
           <div class="rfp-item-meta">
             <span><em>Est. Value</em>${fmtMoney(r.valLow)}–${fmtMoney(r.valHigh)}</span>
             <span><em>Deadline</em>${fmtDate(r.deadline)}</span>
-            ${r.scope ? `<span><em>Scope</em>${r.scope}</span>` : ''}
+            ${r.scope ? `<span><em>Scope</em>${escapeHTML(r.scope)}</span>` : ''}
+            ${r.clientCode ? `<span><em>Client Code</em>${escapeHTML(r.clientCode)}</span>` : ''}
           </div>
-          ${r.notes ? `<div style="margin-top:0.5rem;font-size:0.75rem;color:var(--text-muted);font-style:italic;">Note: ${r.notes}</div>` : ''}
+          ${phaseBar(r.phase || 1)}
+          ${r.notes ? `<div style="margin-top:0.5rem;font-size:0.75rem;color:var(--text-muted);font-style:italic;">Note: ${escapeHTML(r.notes)}</div>` : ''}
         </div>
         <div class="rfp-item-actions">
           <button class="btn-edit" onclick="editRFP('${r.id}')">✏ Edit</button>
+          ${r.clientCode ? `<button class="btn-share" onclick="copyClientLink('${r.id}','${r.clientCode}')">⇪ Client Link</button>` : ''}
           <button class="btn-toggle-status" onclick="toggleStatus('${r.id}')">${r.status === 'open' ? 'Close RFP' : 'Reopen'}</button>
-          <button class="btn-delete" onclick="deleteRFP('${r.id}')">✕ Delete</button>
+          ${currentUser.role === 'admin' ? `<button class="btn-delete" onclick="deleteRFP('${r.id}')">✕ Delete</button>` : ''}
         </div>
       </div>
     `).join('');
+  }
+
+  function escapeHTML(s) {
+    return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   }
 
   function updateStats(rfps) {
@@ -512,12 +1018,17 @@
     document.getElementById('stat-value').textContent = totalVal ? '$' + (totalVal/1000).toFixed(0) + 'K+' : '$0';
   }
 
-  // ── ADD ──
+  // ─────────────────────────────────────────────
+  //               ADD / EDIT / DELETE
+  // ─────────────────────────────────────────────
   function addRFP() {
-    const title = document.getElementById('f-title').value.trim();
-    const org = document.getElementById('f-org').value.trim();
+    const title    = document.getElementById('f-title').value.trim();
+    const org      = document.getElementById('f-org').value.trim();
     const category = document.getElementById('f-category').value;
-    if (!title || !org || !category) { showToast('Please fill in Title, Organization, and Category.', 'red'); return; }
+    const rep      = document.getElementById('f-rep').value;
+    if (!title || !org || !category || !rep) {
+      showToast('Please fill in Title, Organization, Category, and Assigned Rep.', 'red'); return;
+    }
 
     const rfps = getRFPs();
     const newRFP = {
@@ -531,21 +1042,26 @@
       status: document.getElementById('f-status').value,
       scope: document.getElementById('f-scope').value.trim(),
       notes: document.getElementById('f-notes').value.trim(),
-      created: Date.now()
+      rep,
+      phase: parseInt(document.getElementById('f-phase').value) || 1,
+      clientCode: document.getElementById('f-clientcode').value.trim(),
+      created: Date.now(),
+      createdBy: currentUser.username
     };
     rfps.unshift(newRFP);
     saveRFPs(rfps);
-    renderList(rfps);
-    updateStats(rfps);
+    applyFilters();
     clearForm();
     showToast(`✓ ${newRFP.id} added successfully`, 'green');
+
+    // Fire Formspree notification (non-blocking)
+    notifyFormspree(newRFP, 'RFP Added');
   }
 
-  // ── EDIT ──
   function editRFP(id) {
-    const rfps = getRFPs();
-    const r = rfps.find(x => x.id === id);
+    const r = getRFPs().find(x => x.id === id);
     if (!r) return;
+    if (currentUser.role === 'rep' && r.rep !== currentUser.username) { showToast('Not your RFP.', 'red'); return; }
     document.getElementById('edit-id').value = id;
     document.getElementById('f-title').value = r.title;
     document.getElementById('f-org').value = r.org;
@@ -557,6 +1073,9 @@
     document.getElementById('f-status').value = r.status;
     document.getElementById('f-scope').value = r.scope || '';
     document.getElementById('f-notes').value = r.notes || '';
+    document.getElementById('f-rep').value = r.rep || '';
+    document.getElementById('f-phase').value = r.phase || 1;
+    document.getElementById('f-clientcode').value = r.clientCode || '';
     document.getElementById('form-title').textContent = 'Edit RFP — ' + id;
     document.getElementById('form-sub').textContent = 'Update the fields below and save.';
     document.getElementById('btn-add-rfp').style.display = 'none';
@@ -569,15 +1088,18 @@
   }
 
   function updateRFP() {
-    const id = document.getElementById('edit-id').value;
-    const title = document.getElementById('f-title').value.trim();
-    const org = document.getElementById('f-org').value.trim();
+    const id       = document.getElementById('edit-id').value;
+    const title    = document.getElementById('f-title').value.trim();
+    const org      = document.getElementById('f-org').value.trim();
     const category = document.getElementById('f-category').value;
-    if (!title || !org || !category) { showToast('Please fill in Title, Organization, and Category.', 'red'); return; }
-
+    const rep      = document.getElementById('f-rep').value;
+    if (!title || !org || !category || !rep) {
+      showToast('Please fill in Title, Organization, Category, and Assigned Rep.', 'red'); return;
+    }
     const rfps = getRFPs();
     const idx = rfps.findIndex(x => x.id === id);
     if (idx === -1) return;
+    const prevPhase = rfps[idx].phase;
     rfps[idx] = { ...rfps[idx], title, org,
       location: document.getElementById('f-location').value.trim(),
       category,
@@ -587,12 +1109,17 @@
       status: document.getElementById('f-status').value,
       scope: document.getElementById('f-scope').value.trim(),
       notes: document.getElementById('f-notes').value.trim(),
+      rep,
+      phase: parseInt(document.getElementById('f-phase').value) || 1,
+      clientCode: document.getElementById('f-clientcode').value.trim(),
+      updated: Date.now(),
+      updatedBy: currentUser.username
     };
     saveRFPs(rfps);
-    renderList(rfps);
-    updateStats(rfps);
+    applyFilters();
     cancelEdit();
     showToast(`✓ ${id} updated`, 'green');
+    if (parseInt(prevPhase) !== rfps[idx].phase) notifyFormspree(rfps[idx], 'Phase Changed');
   }
 
   function cancelEdit() {
@@ -606,60 +1133,303 @@
     document.querySelectorAll('.rfp-list-item').forEach(el => el.classList.remove('editing'));
   }
 
-  // ── DELETE ──
   function deleteRFP(id) {
+    if (currentUser.role !== 'admin') { showToast('Only admins can delete.', 'red'); return; }
     if (!confirm(`Delete ${id}? This cannot be undone.`)) return;
     const rfps = getRFPs().filter(r => r.id !== id);
     saveRFPs(rfps);
-    renderList(rfps);
-    updateStats(rfps);
+    applyFilters();
     showToast(`${id} deleted`, 'red');
   }
 
-  // ── TOGGLE STATUS ──
   function toggleStatus(id) {
     const rfps = getRFPs();
     const r = rfps.find(x => x.id === id);
     if (!r) return;
+    if (currentUser.role === 'rep' && r.rep !== currentUser.username) { showToast('Not your RFP.', 'red'); return; }
     r.status = r.status === 'open' ? 'closed' : 'open';
     saveRFPs(rfps);
-    renderList(rfps);
-    updateStats(rfps);
+    applyFilters();
     showToast(`${id} marked ${r.status}`, 'green');
   }
 
-  // ── CLEAR ──
   function clearForm() {
-    ['f-title','f-org','f-location','f-val-low','f-val-high','f-deadline','f-scope','f-notes'].forEach(id => {
-      document.getElementById(id).value = '';
-    });
+    ['f-title','f-org','f-location','f-val-low','f-val-high','f-deadline','f-scope','f-notes','f-clientcode']
+      .forEach(id => { document.getElementById(id).value = ''; });
     document.getElementById('f-category').value = '';
     document.getElementById('f-status').value = 'open';
+    document.getElementById('f-phase').value = '1';
+    if (currentUser.role === 'rep') document.getElementById('f-rep').value = currentUser.username;
+    else document.getElementById('f-rep').value = '';
   }
 
-  // ── EXPORT ──
+  function copyClientLink(id, code) {
+    const url = `${location.origin}${location.pathname.replace(/admin\.html.*/i, '')}client.html?p=${encodeURIComponent(id)}&c=${encodeURIComponent(code)}`;
+    navigator.clipboard.writeText(url).then(() => {
+      showToast('✓ Client portal link copied to clipboard', 'green');
+    }).catch(() => {
+      prompt('Copy this client link:', url);
+    });
+  }
+
+  // ─────────────────────────────────────────────
+  //                  EXPORT/IMPORT
+  // ─────────────────────────────────────────────
   function exportJSON() {
-    const rfps = getRFPs();
+    const rfps = visibleRFPs();
     const blob = new Blob([JSON.stringify(rfps, null, 2)], { type: 'application/json' });
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
     a.download = 'inductra-rfps-' + new Date().toISOString().split('T')[0] + '.json';
     a.click();
     showToast('✓ JSON exported', 'green');
   }
-
   function exportCSV() {
-    const rfps = getRFPs();
-    const headers = ['ID','Title','Organization','Location','Category','Value Low','Value High','Deadline','Status','Scope','Notes'];
-    const rows = rfps.map(r => [r.id, r.title, r.org, r.location, r.category, r.valLow, r.valHigh, r.deadline, r.status, r.scope, r.notes].map(v => `"${(v||'').toString().replace(/"/g,'""')}"`).join(','));
+    const rfps = visibleRFPs();
+    const headers = ['ID','Title','Organization','Location','Category','Rep','Phase','Value Low','Value High','Deadline','Status','Scope','Client Code','Notes'];
+    const rows = rfps.map(r => [r.id,r.title,r.org,r.location,r.category,r.rep,r.phase,r.valLow,r.valHigh,r.deadline,r.status,r.scope,r.clientCode,r.notes]
+      .map(v => `"${(v??'').toString().replace(/"/g,'""')}"`).join(','));
     const csv = [headers.join(','), ...rows].join('\n');
     const blob = new Blob([csv], { type: 'text/csv' });
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
     a.download = 'inductra-rfps-' + new Date().toISOString().split('T')[0] + '.csv';
     a.click();
-    showToast('✓ CSV exported — open in Excel or Google Sheets', 'green');
+    showToast('✓ CSV exported', 'green');
+  }
+  function importJSON() { document.getElementById('import-file').click(); }
+  function handleImport(e) {
+    const f = e.target.files[0];
+    if (!f) return;
+    const r = new FileReader();
+    r.onload = ev => {
+      try {
+        const data = JSON.parse(ev.target.result);
+        if (!Array.isArray(data)) throw new Error('Not an array');
+        if (!confirm(`Import ${data.length} RFPs? This replaces current data.`)) return;
+        saveRFPs(data); applyFilters();
+        showToast(`✓ Imported ${data.length} RFPs`, 'green');
+      } catch(err) { showToast('Invalid JSON file.', 'red'); }
+    };
+    r.readAsText(f);
+    e.target.value = '';
+  }
+  function resetData() {
+    if (!confirm('Reset to default sample RFPs? This deletes all current data.')) return;
+    saveRFPs(getDefaultRFPs()); applyFilters();
+    showToast('Data reset to samples', 'red');
   }
 
-  // ── TOAST ──
+  // ─────────────────────────────────────────────
+  //                  FORMSPREE
+  // ─────────────────────────────────────────────
+  function getFormspreeID() {
+    const stored = localStorage.getItem(FORMSPREE_KEY);
+    if (stored !== null) return stored;        // user has explicitly saved (even if blank)
+    return FORMSPREE_DEFAULT;                  // first-load default
+  }
+  function saveFormspree() {
+    const v = document.getElementById('setting-formspree').value.trim();
+    localStorage.setItem(FORMSPREE_KEY, v);
+    loadSettings();
+    buildEmbedCode();
+    showToast(v ? '✓ Formspree ID saved' : 'Formspree ID cleared', 'green');
+  }
+  async function testFormspree() {
+    const id = getFormspreeID();
+    if (!id) { showToast('Save a Formspree ID first.', 'red'); return; }
+    try {
+      const res = await fetch('https://formspree.io/f/' + id, {
+        method: 'POST',
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          _subject: 'Inductra Admin — test message',
+          source: 'admin-settings-test',
+          message: 'This is a test from your Inductra admin portal. If you got this, Formspree is wired up correctly.',
+          sentBy: currentUser.username,
+          sentAt: new Date().toISOString()
+        })
+      });
+      if (res.ok) showToast('✓ Test sent — check your inbox', 'green');
+      else showToast('Formspree responded with an error. Check your form ID.', 'red');
+    } catch(e) { showToast('Network error sending test.', 'red'); }
+  }
+  function notifyFormspree(rfp, eventType) {
+    const id = getFormspreeID();
+    if (!id) return;
+    fetch('https://formspree.io/f/' + id, {
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        _subject: `Inductra · ${eventType} · ${rfp.id} — ${rfp.title}`,
+        event: eventType,
+        rfpId: rfp.id, title: rfp.title, organization: rfp.org, location: rfp.location,
+        category: rfp.category, valLow: rfp.valLow, valHigh: rfp.valHigh,
+        deadline: rfp.deadline, status: rfp.status, phase: rfp.phase,
+        phaseLabel: PHASES[(rfp.phase || 1) - 1], assignedRep: rfp.rep,
+        actionedBy: currentUser.username, actionedAt: new Date().toISOString()
+      })
+    }).catch(() => { /* silent */ });
+  }
+
+  function submitIntake(e) {
+    e.preventDefault();
+    const id = getFormspreeID();
+    if (!id) {
+      showToast('Save a Formspree ID in Settings first.', 'red'); return false;
+    }
+    const form = e.target;
+    const data = Object.fromEntries(new FormData(form).entries());
+    fetch('https://formspree.io/f/' + id, {
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    }).then(res => {
+      if (res.ok) { showToast('✓ Test intake submitted', 'green'); form.reset(); }
+      else showToast('Submission error. Check Formspree.', 'red');
+    }).catch(() => showToast('Network error.', 'red'));
+    return false;
+  }
+
+  function buildEmbedCode() {
+    const id = getFormspreeID() || 'YOUR_FORM_ID';
+    const code = `<!-- Inductra public RFP intake form -->
+<form action="https://formspree.io/f/${id}" method="POST" class="inductra-intake">
+  <h3>Tell us about your project</h3>
+  <p>We respond within one business day. No obligation.</p>
+
+  <label>Your name *<input type="text" name="name" required></label>
+  <label>Organization *<input type="text" name="organization" required></label>
+
+  <div class="row-2">
+    <label>Email *<input type="email" name="email" required></label>
+    <label>Phone<input type="tel" name="phone"></label>
+  </div>
+
+  <div class="row-2">
+    <label>Project type
+      <select name="project_type">
+        <option value="roofing">Roofing</option>
+        <option value="paving">Paving</option>
+        <option value="hvac">HVAC</option>
+        <option value="electrical">Electrical</option>
+        <option value="other">Other / Unsure</option>
+      </select>
+    </label>
+    <label>Location<input type="text" name="location" placeholder="City, State"></label>
+  </div>
+
+  <label>Tell us about the project
+    <textarea name="message" rows="4"
+      placeholder="Square footage, age, urgency, hail damage, etc."></textarea>
+  </label>
+
+  <input type="hidden" name="_subject" value="New RFP Intake — Inductra Building Systems">
+  <input type="hidden" name="source" value="public-website">
+
+  <button type="submit">Send →</button>
+</form>`;
+    document.getElementById('embed-code-block').textContent = code;
+  }
+  function copyEmbed() {
+    const code = document.getElementById('embed-code-block').textContent;
+    navigator.clipboard.writeText(code).then(() => showToast('✓ Embed snippet copied', 'green'));
+  }
+
+  // ─────────────────────────────────────────────
+  //              GOOGLE SEARCH CONSOLE
+  // ─────────────────────────────────────────────
+  function getGSC() { return localStorage.getItem(GSC_KEY) || ''; }
+  function saveGSC() {
+    let v = document.getElementById('setting-gsc').value.trim();
+    // Strip if user pasted full meta tag
+    const m = v.match(/content=["']([^"']+)["']/);
+    if (m) v = m[1];
+    localStorage.setItem(GSC_KEY, v);
+    loadSettings();
+    buildGSCTag();
+    showToast(v ? '✓ GSC token saved' : 'GSC token cleared', 'green');
+  }
+  function buildGSCTag() {
+    const tok = getGSC();
+    document.getElementById('gsc-tag-block').textContent = tok
+      ? `<meta name="google-site-verification" content="${tok}" />`
+      : '<!-- save a verification token first -->';
+  }
+  function copyGSCTag() {
+    const v = document.getElementById('gsc-tag-block').textContent;
+    if (v.includes('save a verification')) { showToast('Save a token first.', 'red'); return; }
+    navigator.clipboard.writeText(v).then(() => showToast('✓ Meta tag copied', 'green'));
+  }
+
+  function buildSitemap() {
+    const today = new Date().toISOString().split('T')[0];
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>${SITE_URL}/</loc>
+    <lastmod>${today}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>${SITE_URL}/index.html</loc>
+    <lastmod>${today}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+</urlset>`;
+    document.getElementById('sitemap-block').textContent = xml;
+  }
+  function copySitemap() {
+    navigator.clipboard.writeText(document.getElementById('sitemap-block').textContent)
+      .then(() => showToast('✓ sitemap.xml copied', 'green'));
+  }
+  function downloadSitemap() {
+    const xml = document.getElementById('sitemap-block').textContent;
+    const blob = new Blob([xml], { type: 'application/xml' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+    a.download = 'sitemap.xml'; a.click();
+    showToast('✓ sitemap.xml downloaded — upload to your site root', 'green');
+  }
+  function buildRobots() {
+    const txt = `User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /client.html
+Disallow: /roofing_hail_map_mvp/
+
+Sitemap: ${SITE_URL}/sitemap.xml`;
+    document.getElementById('robots-block').textContent = txt;
+  }
+  function copyRobots() {
+    navigator.clipboard.writeText(document.getElementById('robots-block').textContent)
+      .then(() => showToast('✓ robots.txt copied', 'green'));
+  }
+
+  // ─────────────────────────────────────────────
+  //                  SETTINGS LOAD
+  // ─────────────────────────────────────────────
+  function loadSettings() {
+    const fs = getFormspreeID();
+    document.getElementById('setting-formspree').value = fs;
+    const fsBadge = document.getElementById('fs-badge');
+    const intakeBadge = document.getElementById('formspree-status');
+    if (fs) {
+      fsBadge.textContent = 'Configured'; fsBadge.className = 'badge-ok';
+      if (intakeBadge) { intakeBadge.textContent = 'Formspree configured'; intakeBadge.className = 'badge-ok'; }
+    } else {
+      fsBadge.textContent = 'Not configured'; fsBadge.className = 'badge-warn';
+      if (intakeBadge) { intakeBadge.textContent = 'Formspree not configured'; intakeBadge.className = 'badge-warn'; }
+    }
+    const gsc = getGSC();
+    document.getElementById('setting-gsc').value = gsc;
+    const gscBadge = document.getElementById('gsc-badge');
+    if (gsc) { gscBadge.textContent = 'Token saved'; gscBadge.className = 'badge-ok'; }
+    else { gscBadge.textContent = 'Not verified'; gscBadge.className = 'badge-warn'; }
+  }
+
+  // ─────────────────────────────────────────────
+  //                    TOAST
+  // ─────────────────────────────────────────────
   function showToast(msg, type) {
     const t = document.getElementById('toast');
     const m = document.getElementById('toast-msg');

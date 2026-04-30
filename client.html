@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Inductra Client Portal — Project Timeline</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1a2e; --slate: #2d3748; --warm-white: #fdfaf6; --cream: #f5f0e8;
+    --copper: #b5651d; --copper-light: #d4843a; --copper-pale: #f0e0cc;
+    --sage: #4a7c6f; --sage-pale: #ddf0eb;
+    --text-muted: #6b7280; --border: #e2d9cc;
+    --shadow: 0 4px 24px rgba(26,26,46,0.08);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--ink); min-height: 100vh; }
+
+  /* LOGIN */
+  #login-screen {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    background: var(--ink);
+  }
+  .login-box {
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px; padding: 3rem; width: 400px; text-align: center;
+  }
+  .login-logo { display: flex; justify-content: center; margin: 0 auto 1.5rem; }
+  .login-box h2 { font-family: 'Libre Baskerville', serif; color: #fff; margin-bottom: 0.4rem; }
+  .login-box p.tagline { font-size: 0.85rem; color: rgba(255,255,255,0.5); margin-bottom: 2rem; }
+  .login-box input {
+    width: 100%; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px; padding: 0.875rem 1rem; color: #fff; font-size: 0.95rem;
+    font-family: 'DM Sans', sans-serif; outline: none; margin-bottom: 1rem;
+  }
+  .login-box input:focus { border-color: var(--copper); }
+  .login-box input::placeholder { color: rgba(255,255,255,0.3); }
+  .login-btn {
+    width: 100%; background: var(--copper); color: #fff; border: none;
+    padding: 0.875rem; border-radius: 8px; font-size: 0.95rem; font-weight: 600;
+    cursor: pointer; font-family: 'DM Sans', sans-serif; transition: background 0.2s;
+  }
+  .login-btn:hover { background: var(--copper-light); }
+  .login-error { color: #ff6b6b; font-size: 0.82rem; margin-top: 0.75rem; display: none; }
+  .login-hint { color: rgba(255,255,255,0.4); font-size: 0.72rem; margin-top: 1.5rem; line-height: 1.5; }
+
+  /* PORTAL */
+  #portal-screen { display: none; }
+  .portal-nav {
+    background: var(--ink); padding: 0 2rem; height: 60px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .nav-left { display: flex; align-items: center; gap: 0.75rem; }
+  .client-badge {
+    background: var(--sage-pale); color: var(--sage); border: 1px solid var(--sage);
+    padding: 0.2rem 0.75rem; border-radius: 100px; font-size: 0.7rem; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .logout-btn {
+    background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.7);
+    border: 1px solid rgba(255,255,255,0.12); padding: 0.4rem 1rem;
+    border-radius: 6px; font-size: 0.8rem; cursor: pointer; font-family: 'DM Sans', sans-serif;
+  }
+  .logout-btn:hover { background: rgba(255,255,255,0.15); color: #fff; }
+
+  .portal-body { max-width: 980px; margin: 0 auto; padding: 2.5rem 2rem 4rem; }
+
+  /* HERO */
+  .project-hero {
+    background: #fff; border: 1px solid var(--border); border-radius: 16px;
+    padding: 2rem 2.25rem; box-shadow: var(--shadow); margin-bottom: 2rem;
+  }
+  .project-id-row {
+    display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.75rem; flex-wrap: wrap;
+  }
+  .project-id {
+    font-size: 0.72rem; font-weight: 700; color: var(--text-muted);
+    letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .cat-tag {
+    font-size: 0.68rem; font-weight: 700; padding: 0.2rem 0.7rem;
+    border-radius: 100px; letter-spacing: 0.06em; text-transform: uppercase;
+  }
+  .tag-roofing    { background: var(--copper-pale); color: var(--copper); }
+  .tag-paving     { background: var(--sage-pale);   color: var(--sage); }
+  .tag-hvac       { background: #e8edf5;            color: #3b5b9c; }
+  .tag-electrical { background: #f5f0d8;            color: #8a7020; }
+  .tag-other      { background: var(--cream);       color: var(--slate); }
+  .status-pill {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 0.25rem 0.7rem; border-radius: 100px; font-size: 0.72rem; font-weight: 700;
+    letter-spacing: 0.05em; text-transform: uppercase;
+  }
+  .pill-open   { background: var(--sage-pale);  color: var(--sage); }
+  .pill-closed { background: #e9ecef;            color: var(--text-muted); }
+
+  .project-title {
+    font-family: 'Libre Baskerville', serif; font-size: 1.85rem;
+    line-height: 1.2; color: var(--ink); margin-bottom: 0.4rem;
+  }
+  .project-org { font-size: 1rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+
+  .meta-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;
+    margin-top: 1rem;
+  }
+  .meta-cell {
+    border-left: 3px solid var(--copper); padding-left: 0.85rem;
+  }
+  .meta-cell em {
+    font-style: normal; font-size: 0.7rem; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700;
+    display: block; margin-bottom: 0.25rem;
+  }
+  .meta-cell strong {
+    font-family: 'Libre Baskerville', serif; font-size: 1.05rem; font-weight: 700;
+    color: var(--ink);
+  }
+
+  /* TIMELINE */
+  .panel {
+    background: #fff; border: 1px solid var(--border); border-radius: 16px;
+    padding: 2rem 2.25rem; box-shadow: var(--shadow); margin-bottom: 2rem;
+  }
+  .panel-title {
+    font-family: 'Libre Baskerville', serif; font-size: 1.2rem; margin-bottom: 0.4rem;
+  }
+  .panel-sub { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 2rem; }
+
+  .timeline {
+    position: relative; padding-left: 1.75rem;
+  }
+  .timeline::before {
+    content: ''; position: absolute; left: 9px; top: 8px; bottom: 8px;
+    width: 2px; background: var(--border);
+  }
+  .timeline-step {
+    position: relative; padding-bottom: 1.6rem;
+  }
+  .timeline-step:last-child { padding-bottom: 0; }
+  .timeline-step .dot {
+    position: absolute; left: -1.75rem; top: 4px;
+    width: 20px; height: 20px; border-radius: 50%;
+    background: var(--cream); border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.65rem; font-weight: 700; color: var(--text-muted);
+  }
+  .timeline-step.done .dot {
+    background: var(--sage); border-color: var(--sage); color: #fff;
+  }
+  .timeline-step.done .dot::after {
+    content: '✓'; font-size: 0.75rem; color: #fff;
+  }
+  .timeline-step.done .dot { font-size: 0; }
+  .timeline-step.current .dot {
+    background: var(--copper); border-color: var(--copper); color: #fff;
+    box-shadow: 0 0 0 5px rgba(181,101,29,0.18);
+  }
+  .timeline-step.current .dot::after { content: ''; }
+  .step-label {
+    font-family: 'Libre Baskerville', serif; font-size: 1rem; font-weight: 700;
+    color: var(--ink); margin-bottom: 0.15rem;
+  }
+  .timeline-step.upcoming .step-label { color: var(--text-muted); font-weight: 400; }
+  .step-meta { font-size: 0.78rem; color: var(--text-muted); }
+  .step-current-tag {
+    display: inline-block; background: var(--copper); color: #fff;
+    padding: 0.15rem 0.65rem; border-radius: 100px;
+    font-size: 0.65rem; font-weight: 700; letter-spacing: 0.06em;
+    text-transform: uppercase; margin-left: 0.5rem; vertical-align: middle;
+  }
+
+  /* CONTACT */
+  .contact-row {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
+  }
+  .contact-card {
+    border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem 1.5rem;
+    background: var(--warm-white);
+  }
+  .contact-card .role {
+    font-size: 0.68rem; color: var(--text-muted); font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.4rem;
+  }
+  .contact-card .name {
+    font-family: 'Libre Baskerville', serif; font-size: 1.1rem;
+    color: var(--ink); margin-bottom: 0.25rem;
+  }
+  .contact-card .detail { font-size: 0.85rem; color: var(--slate); }
+
+  .scope-text {
+    background: var(--cream); border-left: 3px solid var(--copper);
+    padding: 1rem 1.25rem; border-radius: 0 8px 8px 0;
+    font-size: 0.95rem; color: var(--slate); line-height: 1.6;
+  }
+
+  .footer {
+    text-align: center; margin-top: 3rem; padding-top: 2rem;
+    border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.78rem;
+  }
+  .footer a { color: var(--copper); text-decoration: none; }
+
+  @media (max-width: 700px) {
+    .meta-grid { grid-template-columns: 1fr 1fr; }
+    .contact-row { grid-template-columns: 1fr; }
+    .project-title { font-size: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">
+      <svg viewBox="0 0 94 90" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:56px;width:auto;">
+        <polygon points="10,72 52,32 62,42 20,82" fill="#3a4a5c" opacity="0.7"/>
+        <polygon points="28,72 70,32 80,42 38,82" fill="#2d3a4a" opacity="0.85"/>
+        <polygon points="58,18 90,52 58,52" fill="#3a6fa8"/>
+        <polygon points="58,18 90,52 70,52 58,30" fill="#4d8bc4"/>
+        <polygon points="68,44 94,70 94,82 68,82" fill="#b5651d"/>
+        <polygon points="68,44 94,70 84,70 68,52" fill="#d4843a"/>
+      </svg>
+    </div>
+    <h2>Client Portal</h2>
+    <p class="tagline">Inductra Building Systems</p>
+    <input type="text" id="proj-input" placeholder="Project code (e.g. PRJ-001)">
+    <input type="password" id="code-input" placeholder="Access code" onkeydown="if(event.key==='Enter') checkLogin()">
+    <button class="login-btn" onclick="checkLogin()">View Project →</button>
+    <div class="login-error" id="login-error">Project code or access code is incorrect.</div>
+    <div class="login-hint">Don't have a code? Contact your Inductra project manager.</div>
+  </div>
+</div>
+
+<!-- PORTAL -->
+<div id="portal-screen">
+  <nav class="portal-nav">
+    <div class="nav-left">
+      <svg viewBox="0 0 420 90" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Inductra Building Systems" style="height:42px;width:auto;">
+        <polygon points="10,72 52,32 62,42 20,82" fill="#3a4a5c" opacity="0.7"/>
+        <polygon points="28,72 70,32 80,42 38,82" fill="#2d3a4a" opacity="0.85"/>
+        <polygon points="58,18 90,52 58,52" fill="#3a6fa8"/>
+        <polygon points="58,18 90,52 70,52 58,30" fill="#4d8bc4"/>
+        <polygon points="68,44 94,70 94,82 68,82" fill="#b5651d"/>
+        <polygon points="68,44 94,70 84,70 68,52" fill="#d4843a"/>
+        <text x="105" y="52" font-family="Arial Black, sans-serif" font-weight="900" font-size="38" letter-spacing="3" fill="#ffffff">INDUCTRA</text>
+        <line x1="105" y1="60" x2="415" y2="60" stroke="#b5651d" stroke-width="1.5"/>
+        <text x="107" y="78" font-family="Arial, sans-serif" font-weight="700" font-size="15" letter-spacing="4" fill="#b5651d">BUILDING SYSTEMS LLC</text>
+      </svg>
+      <span class="client-badge">Client View</span>
+    </div>
+    <button class="logout-btn" onclick="logout()">Sign Out</button>
+  </nav>
+
+  <div class="portal-body">
+
+    <!-- HERO -->
+    <div class="project-hero" id="project-hero"></div>
+
+    <!-- TIMELINE -->
+    <div class="panel">
+      <div class="panel-title">Project Timeline</div>
+      <div class="panel-sub" id="timeline-sub"></div>
+      <div class="timeline" id="timeline"></div>
+    </div>
+
+    <!-- SCOPE -->
+    <div class="panel" id="scope-panel" style="display:none;">
+      <div class="panel-title">Scope of work</div>
+      <div class="panel-sub">A summary of what's included in this engagement.</div>
+      <div class="scope-text" id="scope-text"></div>
+    </div>
+
+    <!-- CONTACT -->
+    <div class="panel">
+      <div class="panel-title">Your Inductra team</div>
+      <div class="panel-sub">Reach out anytime — we respond within one business day.</div>
+      <div class="contact-row">
+        <div class="contact-card">
+          <div class="role">Project Lead</div>
+          <div class="name" id="contact-rep">—</div>
+          <div class="detail">Inductra Building Systems</div>
+          <div class="detail" style="margin-top:0.5rem;">
+            <a href="mailto:hello@inductrabuildingsystems.com" style="color:var(--copper);text-decoration:none;">
+              hello@inductrabuildingsystems.com
+            </a>
+          </div>
+        </div>
+        <div class="contact-card">
+          <div class="role">Documents</div>
+          <div class="name">Bid package &amp; specs</div>
+          <div class="detail">Delivered separately by your project lead.</div>
+          <div class="detail" style="margin-top:0.5rem;">
+            Need a copy resent? Email us with your project code.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      Powered by Inductra Building Systems · <a href="index.html">Visit our site</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  const STORAGE_KEY = 'inductra_rfps';
+  const SESSION_KEY = 'inductra_client_session';
+  const PHASES = [
+    { label: 'Site Walk & Specs',       desc: 'Initial walkthrough, condition assessment, scope definition.' },
+    { label: 'Bid Package Issued',      desc: 'Full RFP and specifications released to qualified contractors.' },
+    { label: 'Bids Received',           desc: 'Contractor proposals collected, scored, and evaluated.' },
+    { label: 'Award',                   desc: 'Recommended contractor selected and contract executed.' },
+    { label: 'Mobilization',            desc: 'Materials ordered, crew scheduled, site staged.' },
+    { label: 'Construction',            desc: 'Active work on site with progress updates.' },
+    { label: 'Punch List',              desc: 'Final inspection, quality verification, deficiency resolution.' },
+    { label: 'Closeout',                desc: 'Warranties, as-builts, and final documentation delivered.' },
+  ];
+
+  // ─────────────────────────────────────────────
+  //                    AUTH
+  // ─────────────────────────────────────────────
+  function checkLogin(silent) {
+    const id   = (document.getElementById('proj-input').value || '').trim().toUpperCase();
+    const code = (document.getElementById('code-input').value || '').trim();
+    if (!id || !code) {
+      if (!silent) showError(); return;
+    }
+    const rfp = getRFP(id);
+    if (!rfp || !rfp.clientCode || rfp.clientCode.toLowerCase() !== code.toLowerCase()) {
+      if (!silent) showError(); return;
+    }
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify({ id, code }));
+    showPortal(rfp);
+  }
+  function showError() {
+    document.getElementById('login-error').style.display = 'block';
+    document.getElementById('code-input').value = '';
+  }
+  function logout() {
+    sessionStorage.removeItem(SESSION_KEY);
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('portal-screen').style.display = 'none';
+    document.getElementById('proj-input').value = '';
+    document.getElementById('code-input').value = '';
+    document.getElementById('login-error').style.display = 'none';
+  }
+
+  // ─────────────────────────────────────────────
+  //                    DATA
+  // ─────────────────────────────────────────────
+  function getRFP(id) {
+    try {
+      const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+      return data.find(r => r.id === id);
+    } catch { return null; }
+  }
+
+  // ─────────────────────────────────────────────
+  //                  RENDER PORTAL
+  // ─────────────────────────────────────────────
+  function showPortal(r) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('portal-screen').style.display = 'block';
+
+    const cat = (r.category || 'other').toLowerCase();
+    const catLbl = cat.charAt(0).toUpperCase() + cat.slice(1);
+
+    document.getElementById('project-hero').innerHTML = `
+      <div class="project-id-row">
+        <span class="project-id">${escapeHTML(r.id)}</span>
+        <span class="cat-tag tag-${cat}">${escapeHTML(catLbl)}</span>
+        <span class="status-pill ${r.status === 'open' ? 'pill-open' : 'pill-closed'}">${r.status === 'open' ? 'Active' : 'Closed'}</span>
+      </div>
+      <div class="project-title">${escapeHTML(r.title || 'Untitled Project')}</div>
+      <div class="project-org">${escapeHTML(r.org || '')}${r.location ? ' · ' + escapeHTML(r.location) : ''}</div>
+      <div class="meta-grid">
+        <div class="meta-cell">
+          <em>Estimated Value</em>
+          <strong>${fmtRange(r.valLow, r.valHigh)}</strong>
+        </div>
+        <div class="meta-cell">
+          <em>Bid Deadline</em>
+          <strong>${fmtDate(r.deadline)}</strong>
+        </div>
+        <div class="meta-cell">
+          <em>Current Phase</em>
+          <strong>${r.phase || 1} of 8</strong>
+        </div>
+        <div class="meta-cell">
+          <em>Stage</em>
+          <strong>${escapeHTML(PHASES[(r.phase || 1) - 1].label)}</strong>
+        </div>
+      </div>
+    `;
+
+    renderTimeline(r.phase || 1);
+
+    if (r.scope) {
+      document.getElementById('scope-panel').style.display = 'block';
+      document.getElementById('scope-text').textContent = r.scope;
+    }
+
+    document.getElementById('contact-rep').textContent = repName(r.rep);
+    document.getElementById('timeline-sub').textContent =
+      `Currently on Phase ${r.phase || 1} of 8 · ${PHASES[(r.phase || 1) - 1].label}`;
+  }
+
+  function renderTimeline(currentPhase) {
+    const cur = parseInt(currentPhase) || 1;
+    const html = PHASES.map((p, i) => {
+      const n = i + 1;
+      const cls = n < cur ? 'done' : n === cur ? 'current' : 'upcoming';
+      const tag = n === cur ? '<span class="step-current-tag">Current</span>' : '';
+      return `
+        <div class="timeline-step ${cls}">
+          <div class="dot">${n < cur ? '' : n}</div>
+          <div class="step-label">${p.label}${tag}</div>
+          <div class="step-meta">${p.desc}</div>
+        </div>
+      `;
+    }).join('');
+    document.getElementById('timeline').innerHTML = html;
+  }
+
+  function fmtRange(a, b) {
+    const f = n => '$' + Number(n || 0).toLocaleString();
+    if (!a && !b) return '—';
+    if (a && b) return `${f(a)}–${f(b)}`;
+    return f(a || b);
+  }
+  function fmtDate(d) {
+    if (!d) return '—';
+    const [y, m, day] = d.split('-');
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return `${months[parseInt(m)-1]} ${parseInt(day)}, ${y}`;
+  }
+  function escapeHTML(s) {
+    return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+  function repName(rk) {
+    const map = { stephanie: 'Stephanie', admin: 'Inductra Admin', rep1: 'Sales Rep 1', rep2: 'Sales Rep 2' };
+    return map[rk] || 'Your Inductra Lead';
+  }
+
+  // ─────────────────────────────────────────────
+  //                   STARTUP
+  // ─────────────────────────────────────────────
+  (function init() {
+    // 1. URL params (admin can share a link)
+    const url = new URL(window.location.href);
+    const p = url.searchParams.get('p');
+    const c = url.searchParams.get('c');
+    if (p && c) {
+      document.getElementById('proj-input').value = p;
+      document.getElementById('code-input').value = c;
+      checkLogin(true);
+      return;
+    }
+    // 2. Restored session
+    const s = sessionStorage.getItem(SESSION_KEY);
+    if (s) {
+      try {
+        const sess = JSON.parse(s);
+        document.getElementById('proj-input').value = sess.id;
+        document.getElementById('code-input').value = sess.code;
+        checkLogin(true);
+      } catch(e) { /* ignore */ }
+    }
+  })();
+</script>
+</body>
+</html>

@@ -1381,29 +1381,29 @@
         </div>
       </div>
 
-      <div class="reg-form">
+      <form class="reg-form" id="contractor-form" action="https://formspree.io/f/xkoywped" method="POST" onsubmit="return submitForm(event,'contractor')">
         <h3>Contractor Registration</h3>
         <p>Complete this form to access full RFP specifications and join our bid notification list.</p>
         <div class="form-row">
           <div class="form-group">
             <label>Company Name *</label>
-            <input type="text" placeholder="ABC Roofing Co.">
+            <input type="text" name="company" required placeholder="ABC Roofing Co.">
           </div>
           <div class="form-group">
             <label>Primary Contact *</label>
-            <input type="text" placeholder="Full name">
+            <input type="text" name="contact_name" required placeholder="Full name">
           </div>
           <div class="form-group">
             <label>Email *</label>
-            <input type="email" placeholder="contact@company.com">
+            <input type="email" name="email" required placeholder="contact@company.com">
           </div>
           <div class="form-group">
             <label>Phone</label>
-            <input type="tel" placeholder="(316) 555-0100">
+            <input type="tel" name="phone" placeholder="(316) 555-0100">
           </div>
           <div class="form-group full">
             <label>Primary Trade / Specialty *</label>
-            <select>
+            <select name="trade" required>
               <option value="" disabled selected>Select your primary trade</option>
               <option>Roofing</option>
               <option>Paving / Concrete</option>
@@ -1417,24 +1417,26 @@
           </div>
           <div class="form-group full">
             <label>Service Area</label>
-            <input type="text" placeholder="e.g. South-Central Kansas, Wichita Metro">
+            <input type="text" name="service_area" placeholder="e.g. South-Central Kansas, Wichita Metro">
           </div>
           <div class="form-group full">
             <label>Licenses &amp; Certifications</label>
-            <input type="text" placeholder="e.g. KS General Contractor License #12345, GAF Certified...">
+            <input type="text" name="licenses" placeholder="e.g. KS General Contractor License #12345, GAF Certified...">
           </div>
           <div class="form-group full">
             <label>Project Types You Bid</label>
             <div class="checkbox-group">
-              <label class="checkbox-item"><input type="checkbox"> Churches &amp; Houses of Worship</label>
-              <label class="checkbox-item"><input type="checkbox"> Catholic/Private Schools</label>
-              <label class="checkbox-item"><input type="checkbox"> Multi-Site Institutional</label>
-              <label class="checkbox-item"><input type="checkbox"> Historically Significant Buildings</label>
+              <label class="checkbox-item"><input type="checkbox" name="project_types[]" value="Churches & Houses of Worship"> Churches &amp; Houses of Worship</label>
+              <label class="checkbox-item"><input type="checkbox" name="project_types[]" value="Catholic/Private Schools"> Catholic/Private Schools</label>
+              <label class="checkbox-item"><input type="checkbox" name="project_types[]" value="Multi-Site Institutional"> Multi-Site Institutional</label>
+              <label class="checkbox-item"><input type="checkbox" name="project_types[]" value="Historically Significant Buildings"> Historically Significant Buildings</label>
             </div>
           </div>
         </div>
-        <button class="btn-submit" onclick="submitForm('contractor')">Register &amp; Access RFPs →</button>
-      </div>
+        <input type="hidden" name="_subject" value="Inductra · New Contractor Registration">
+        <input type="hidden" name="form_type" value="contractor_registration">
+        <button type="submit" class="btn-submit">Register &amp; Access RFPs →</button>
+      </form>
     </div>
   </div>
 </section>
@@ -1468,17 +1470,17 @@
         </div>
       </div>
 
-      <div class="contact-form-wrap">
+      <form class="contact-form-wrap" id="contact-form" action="https://formspree.io/f/xkoywped" method="POST" onsubmit="return submitForm(event,'contact')">
         <h3>Start a Project</h3>
         <p>Tell us about your organization and what you're looking to accomplish.</p>
         <div class="form-row">
           <div class="form-group light-group">
             <label>Organization Name *</label>
-            <input type="text" placeholder="St. Catherine Parish">
+            <input type="text" name="organization" required placeholder="St. Catherine Parish">
           </div>
           <div class="form-group light-group">
             <label>Organization Type</label>
-            <select>
+            <select name="org_type">
               <option value="" disabled selected>Select...</option>
               <option>Catholic Parish</option>
               <option>Protestant Church</option>
@@ -1490,23 +1492,23 @@
           </div>
           <div class="form-group light-group">
             <label>Your Name *</label>
-            <input type="text" placeholder="Full name">
+            <input type="text" name="name" required placeholder="Full name">
           </div>
           <div class="form-group light-group">
             <label>Your Role</label>
-            <input type="text" placeholder="Pastor, Business Manager...">
+            <input type="text" name="role" placeholder="Pastor, Business Manager...">
           </div>
           <div class="form-group light-group">
             <label>Email *</label>
-            <input type="email" placeholder="you@yourchurch.org">
+            <input type="email" name="email" required placeholder="you@yourchurch.org">
           </div>
           <div class="form-group light-group">
             <label>Phone</label>
-            <input type="tel" placeholder="(316) 555-0100">
+            <input type="tel" name="phone" placeholder="(316) 555-0100">
           </div>
           <div class="form-group light-group full">
             <label>Project Type</label>
-            <select>
+            <select name="project_type">
               <option value="" disabled selected>What kind of project?</option>
               <option>Roofing</option>
               <option>Paving / Parking Lot</option>
@@ -1518,11 +1520,13 @@
           </div>
           <div class="form-group light-group full">
             <label>Project Description</label>
-            <textarea placeholder="Briefly describe what needs to be done, approximate size or scope, and any timeline considerations..."></textarea>
+            <textarea name="message" placeholder="Briefly describe what needs to be done, approximate size or scope, and any timeline considerations..."></textarea>
           </div>
         </div>
-        <button class="btn-submit-light" onclick="submitForm('contact')">Submit Project Inquiry →</button>
-      </div>
+        <input type="hidden" name="_subject" value="Inductra · New Project Inquiry">
+        <input type="hidden" name="form_type" value="project_inquiry">
+        <button type="submit" class="btn-submit-light">Submit Project Inquiry →</button>
+      </form>
     </div>
   </div>
 </section>
@@ -1607,12 +1611,54 @@
     if (e.target === this) closeModal();
   });
 
-  function submitForm(type) {
-    const msg = type === 'contractor' ? 'Registration received' : 'Project inquiry received';
-    document.getElementById('toast-msg').textContent = '✓ ' + msg;
+  // ── FORMSPREE INTEGRATION ──
+  // Vanilla-JS Ajax submit. Stays on page, shows inline success/error in the toast.
+  // Endpoint: https://formspree.io/f/xkoywped
+  function submitForm(event, type) {
+    event.preventDefault();
+    const form = event.target;
+    const btn = form.querySelector('button[type=submit]');
+    const originalLabel = btn ? btn.textContent : '';
+    if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
+
+    const successMsg = type === 'contractor'
+      ? 'Registration received — we will be in touch within 2 business days.'
+      : 'Project inquiry received — we will respond within 2 business days.';
+
+    fetch(form.action, {
+      method: 'POST',
+      headers: { 'Accept': 'application/json' },
+      body: new FormData(form)
+    })
+    .then(res => {
+      if (res.ok) {
+        showFormToast('✓ ' + successMsg, true);
+        form.reset();
+      } else {
+        return res.json().then(data => {
+          const errMsg = (data && data.errors && data.errors.length)
+            ? data.errors.map(e => e.message).join(', ')
+            : 'Submission error — please try again or email inductrabuildingsystems@outlook.com.';
+          showFormToast('✕ ' + errMsg, false);
+        }).catch(() => showFormToast('✕ Submission error — please email inductrabuildingsystems@outlook.com.', false));
+      }
+    })
+    .catch(() => showFormToast('✕ Network error — please try again or email inductrabuildingsystems@outlook.com.', false))
+    .finally(() => { if (btn) { btn.disabled = false; btn.textContent = originalLabel; } });
+
+    return false;
+  }
+
+  function showFormToast(message, ok) {
+    const m = document.getElementById('toast-msg');
+    if (m) m.textContent = message;
     const t = document.getElementById('toast');
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 4000);
+    if (t) {
+      t.classList.add('show');
+      // tint toast red if it's an error and the toast supports it
+      t.style.background = ok ? '' : '#7a2424';
+      setTimeout(() => { t.classList.remove('show'); t.style.background = ''; }, 5000);
+    }
   }
 
   const observer = new IntersectionObserver((entries) => {
